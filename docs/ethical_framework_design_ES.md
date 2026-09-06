@@ -1,6 +1,7 @@
 # Marco Pedagógico y Métricas de Evaluación en Lingüística Computacional para la Simulación Interactiva de Ética en IA: Un Enfoque de Modelado de Decisiones Multidimensional
 
-**Autor**: Consorcio de Investigación e Ingeniería en Ética de la IA  
+**Autor**: Alejandro Peña (`alej-developer`)  
+**Contacto**: josealepm24@gmail.com  
 **Filiación**: Departamento de Lingüística Computacional e Ingeniería de Seguridad en IA  
 **Proyecto**: Simulador Interactivo de Ética en IA  
 **Normativa de Publicación**: American Psychological Association (APA) 7.ª Edición  

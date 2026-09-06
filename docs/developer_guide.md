@@ -3,6 +3,7 @@
 <!-- EN: Technical developer guide detailing Clean Architecture implementation, SOLID principles, backend layers, frontend design, and extension workflows. | ES: Guia tecnica para desarrolladores que detalla la implementacion de Arquitectura Limpia, principios SOLID, capas del backend, diseno del frontend y flujos de extension. -->
 
 **Project**: AI Ethics Interactive Simulator  
+**Author**: Alejandro Peña (`alej-developer`) - josealepm24@gmail.com  
 **Architecture Paradigm**: Clean Architecture (Hexagonal / Ports & Adapters)  
 **Backend Stack**: Python 3.11+, FastAPI, Pydantic V2, Poetry, Mypy, Ruff, Pytest  
 **Frontend Stack**: Vanilla TypeScript, Vite, Raw CSS Variables (CSS Modules), WCAG AA  

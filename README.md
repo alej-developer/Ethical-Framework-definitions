@@ -80,4 +80,12 @@ make dev-frontend
 ```
 
 ## Documentation / Documentacion
-See `docs/apa_format/architectural_decisions_whitepaper.md` for a comprehensive academic whitepaper formatted in APA 7th edition, detailing theoretical foundations, mathematical metric formalization, and Clean Architecture mappings.
+- Canonical APA 7th Whitepaper: `docs/ethical_framework_design.md`
+- Spanish Edition: `docs/ethical_framework_design_ES.md`
+- English Edition: `docs/ethical_framework_design_EN.md`
+- Architectural Whitepaper: `docs/apa_format/architectural_decisions_whitepaper.md`
+- Developer Guide (Clean Architecture): `docs/developer_guide.md`
+
+## Author / Autoria
+- **Alejandro Peña** (`alej-developer`) - [josealepm24@gmail.com](mailto:josealepm24@gmail.com)
+

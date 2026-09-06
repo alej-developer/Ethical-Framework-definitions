@@ -1,6 +1,7 @@
 # Architectural Decisions and Formal Ethical Framework Evaluation for Natural Language Processing Systems: A Clean Architecture Approach
 
-**Author**: AI Ethics Research & Engineering Consortium  
+**Author**: Alejandro Peña (`alej-developer`)  
+**Contact**: josealepm24@gmail.com  
 **Affiliation**: Institute for Ethical Artificial Intelligence and Computational Linguistics  
 **Publication Standard**: American Psychological Association (APA) 7th Edition  
 **Date**: September 2026  
