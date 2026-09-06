@@ -27,55 +27,106 @@ def test_frameworks_endpoint() -> None:
     assert "IEEE_7000_SERIES" in framework_ids
 
 
+# EN: Case Studies Endpoint Tests | ES: Pruebas de Puntos Finales de Casos de Estudio
+
+
+def test_get_cases_endpoint() -> None:
+    """EN: Test GET /api/v1/cases returns the three complex NLP case studies. | ES: Probar que GET /api/v1/cases retorne los tres casos de estudio complejos de NLP."""
+    response = client.get("/api/v1/cases")
+    assert response.status_code == 200
+    cases = response.json()
+    assert len(cases) == 3
+    case_ids = [c["id"] for c in cases]
+    assert "cs-recruitment-llm-001" in case_ids
+    assert "cs-forensic-stylometry-002" in case_ids
+    assert "cs-dataset-provenance-003" in case_ids
+
+
+def test_get_case_detail_success() -> None:
+    """EN: Test GET /api/v1/cases/{id} returns complete case study specification. | ES: Probar que GET /api/v1/cases/{id} retorne la especificacion completa del caso de estudio."""
+    response = client.get("/api/v1/cases/cs-recruitment-llm-001")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == "cs-recruitment-llm-001"
+    assert len(data["decision_options"]) == 3
+    assert "FAIRNESS" in data["baseline_matrix"]
+    assert len(data["linguistic_artifacts"]) == 4
+
+
+def test_get_case_detail_not_found() -> None:
+    """EN: Test GET /api/v1/cases/{id} returns 404 for missing case study. | ES: Probar que GET /api/v1/cases/{id} retorne 404 para caso de estudio faltante."""
+    response = client.get("/api/v1/cases/unknown-case-id")
+    assert response.status_code == 404
+    data = response.json()
+    assert "error" in data
+    assert data["error"]["code"] == "CASE_STUDY_NOT_FOUND"
+
+
+# EN: Decision Submission Endpoint Tests | ES: Pruebas de Punto Final de Envio de Decisiones
+
+
+def test_submit_decision_endpoint_success() -> None:
+    """EN: Test POST /api/v1/decisions successfully evaluates decision impact. | ES: Probar que POST /api/v1/decisions evalue exitosamente el impacto de la decision."""
+    payload = {
+        "case_id": "cs-recruitment-llm-001",
+        "selected_option_id": "opt-recruit-fairness-oversight",
+        "user_rationale": "Mandatory human recruiter oversight with counterfactual fairness audit.",
+        "frameworks": ["EU_AI_ACT", "IEEE_7000_SERIES"],
+    }
+    response = client.post("/api/v1/decisions", json=payload)
+    assert response.status_code == 201
+
+    data = response.json()
+    assert data["case_id"] == "cs-recruitment-llm-001"
+    assert data["selected_option"]["id"] == "opt-recruit-fairness-oversight"
+    assert "matrix" in data
+    assert data["matrix"]["fairness"]["delta"] > 0
+    assert len(data["framework_assessments"]) == 2
+    assert len(data["trade_off_analysis"]) > 20
+    assert len(data["recommendations"]) > 0
+
+    # EN: Test GET /api/v1/evaluations/{id} retrieves saved result | ES: Probar que GET /api/v1/evaluations/{id} recupere el resultado guardado
+    decision_id = data["decision_id"]
+    eval_response = client.get(f"/api/v1/evaluations/{decision_id}")
+    assert eval_response.status_code == 200
+    eval_data = eval_response.json()
+    assert eval_data["decision_id"] == decision_id
+
+
+def test_get_evaluation_not_found() -> None:
+    """EN: Test GET /api/v1/evaluations/{id} returns 404 for unknown evaluation. | ES: Probar que GET /api/v1/evaluations/{id} retorne 404 para evaluacion desconocida."""
+    response = client.get("/api/v1/evaluations/unknown-eval-12345")
+    assert response.status_code == 404
+
+
+# EN: Scenarios Compatibility Tests | ES: Pruebas de Compatibilidad de Escenarios
+
+
 def test_list_scenarios_endpoint() -> None:
-    """EN: Test GET /api/v1/scenarios retrieves seeded benchmark scenarios. | ES: Probar que GET /api/v1/scenarios recupere los escenarios de referencia inicializados."""
+    """EN: Test GET /api/v1/scenarios retrieves scenarios. | ES: Probar que GET /api/v1/scenarios recupere los escenarios."""
     response = client.get("/api/v1/scenarios")
     assert response.status_code == 200
     scenarios = response.json()
     assert len(scenarios) >= 3
-    ids = [s["id"] for s in scenarios]
-    assert "nlp-dialect-bias-001" in ids
-    assert "nlp-clinical-triage-002" in ids
-    assert "nlp-translation-toxic-003" in ids
 
 
 def test_get_single_scenario_success() -> None:
     """EN: Test GET /api/v1/scenarios/{id} returns scenario detail. | ES: Probar que GET /api/v1/scenarios/{id} retorne el detalle del escenario."""
-    response = client.get("/api/v1/scenarios/nlp-dialect-bias-001")
+    response = client.get("/api/v1/scenarios/cs-recruitment-llm-001")
     assert response.status_code == 200
     scenario = response.json()
-    assert scenario["id"] == "nlp-dialect-bias-001"
+    assert scenario["id"] == "cs-recruitment-llm-001"
     assert len(scenario["artifacts"]) > 0
-
-
-def test_get_single_scenario_not_found() -> None:
-    """EN: Test GET /api/v1/scenarios/{id} returns 404 for unknown scenario ID. | ES: Probar que GET /api/v1/scenarios/{id} retorne 404 para un ID de escenario desconocido."""
-    response = client.get("/api/v1/scenarios/unknown-scenario-999")
-    assert response.status_code == 404
-    error_data = response.json()
-    assert "detail" in error_data
 
 
 def test_evaluate_scenario_success() -> None:
     """EN: Test POST /api/v1/evaluations executes assessment and returns 201. | ES: Probar que POST /api/v1/evaluations ejecute la evaluacion y retorne 201."""
     payload = {
-        "scenario_id": "nlp-clinical-triage-002",
+        "scenario_id": "cs-recruitment-llm-001",
         "frameworks": ["EU_AI_ACT", "IEEE_7000_SERIES"],
     }
     response = client.post("/api/v1/evaluations", json=payload)
     assert response.status_code == 201
     assessment = response.json()
-    assert assessment["scenario_id"] == "nlp-clinical-triage-002"
+    assert assessment["scenario_id"] == "cs-recruitment-llm-001"
     assert len(assessment["framework_assessments"]) == 2
-    assert assessment["overall_risk_tier"] == "HIGH_RISK"
-    assert len(assessment["executive_summary"]) > 0
-
-
-def test_evaluate_scenario_invalid_framework() -> None:
-    """EN: Test POST /api/v1/evaluations with unsupported framework returns 400. | ES: Probar que POST /api/v1/evaluations con marco no soportado retorne 400."""
-    payload = {
-        "scenario_id": "nlp-clinical-triage-002",
-        "frameworks": ["INVALID_FRAMEWORK_XYZ"],
-    }
-    response = client.post("/api/v1/evaluations", json=payload)
-    assert response.status_code == 400

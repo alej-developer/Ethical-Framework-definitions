@@ -162,3 +162,103 @@ class EthicalAssessment:
             overall_compliance=overall_compliance,
             executive_summary=executive_summary,
         )
+
+
+class EthicalDimension(str, Enum):
+    """EN: Multidimensional ethical pillars for quantitative assessment. | ES: Pilares eticos multidimensionales para evaluacion cuantitativa."""
+
+    TRANSPARENCY = "TRANSPARENCY"
+    ACCOUNTABILITY = "ACCOUNTABILITY"
+    FAIRNESS = "FAIRNESS"
+
+
+@dataclass(frozen=True)
+class DimensionScore:
+    """EN: Quantified evaluation score and impact delta for a specific ethical dimension. | ES: Puntuacion de evaluacion cuantificada y delta de impacto para una dimension etica especifica."""
+
+    dimension: EthicalDimension
+    baseline_score: float
+    decision_score: float
+    delta: float
+    rationale: str
+
+
+@dataclass(frozen=True)
+class MultidimensionalMatrix:
+    """EN: Unified multidimensional matrix evaluating Transparency, Accountability, and Fairness. | ES: Matriz multidimensional unificada que evalua Transparencia, Rendicion de Cuentas y Equidad."""
+
+    transparency: DimensionScore
+    accountability: DimensionScore
+    fairness: DimensionScore
+    overall_alignment: float
+
+
+@dataclass(frozen=True)
+class DecisionOption:
+    """EN: Predefined decision alternative for an ethical dilemma in computational linguistics. | ES: Alternativa de decision predefinida para un dilema etico en linguistica computacional."""
+
+    id: str
+    title: str
+    description: str
+    strategy: str
+    dimension_modifiers: dict[EthicalDimension, float]
+    rationale: str
+
+
+@dataclass
+class CaseStudy:
+    """EN: Complex computational linguistics case study presenting an ethical dilemma. | ES: Caso de estudio complejo de linguistica computacional que presenta un dilema etico."""
+
+    id: str
+    title: str
+    nlp_domain: str
+    dilemma: str
+    context_description: str
+    task_type: TaskType
+    domain_category: str
+    linguistic_artifacts: list[LinguisticArtifact]
+    baseline_matrix: dict[EthicalDimension, float]
+    decision_options: list[DecisionOption]
+    regulatory_implications: dict[str, str]
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def to_scenario(self) -> Scenario:
+        """EN: Convert case study to base Scenario entity for framework evaluation. | ES: Convertir caso de estudio a entidad base Scenario para evaluacion de marcos."""
+        meta = dict(self.metadata)
+        meta["nlp_domain"] = self.nlp_domain
+        meta["dilemma"] = self.dilemma
+        return Scenario(
+            id=self.id,
+            title=self.title,
+            description=self.context_description,
+            domain_category=self.domain_category,
+            task_type=self.task_type,
+            artifacts=self.linguistic_artifacts,
+            metadata=meta,
+        )
+
+
+@dataclass(frozen=True)
+class UserDecision:
+    """EN: User decision submission addressing a case study dilemma. | ES: Envio de decision del usuario que aborda el dilema de un caso de estudio."""
+
+    case_id: str
+    selected_option_id: str
+    user_rationale: str
+    custom_weights: dict[str, float] | None = None
+
+
+@dataclass
+class DecisionImpactResult:
+    """EN: Complete impact calculation of a submitted decision against the multidimensional matrix. | ES: Calculo de impacto completo de una decision enviada frente a la matriz multidimensional."""
+
+    decision_id: str
+    case_id: str
+    selected_option: DecisionOption
+    matrix: MultidimensionalMatrix
+    framework_assessments: list[FrameworkAssessment]
+    overall_risk_tier: RiskTier
+    overall_compliance: ComplianceStatus
+    trade_off_analysis: str
+    recommendations: list[str]
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))

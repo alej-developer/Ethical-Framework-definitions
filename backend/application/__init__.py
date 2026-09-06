@@ -1,33 +1,61 @@
 """EN: Application layer package exports. | ES: Exportaciones del paquete de la capa de aplicacion."""
 
 from application.dtos import (
+    CaseStudyDTO,
+    CaseStudySummaryDTO,
     CreateScenarioRequest,
+    DecisionImpactResponseDTO,
+    DecisionOptionDTO,
+    DimensionScoreDTO,
     EthicalAssessmentDTO,
     EthicalFindingDTO,
     EvaluateScenarioRequest,
     EvaluationMetricDTO,
     FrameworkAssessmentDTO,
     LinguisticArtifactDTO,
+    MultidimensionalMatrixDTO,
     ScenarioDTO,
+    StandardErrorDetailDTO,
+    StandardErrorResponseDTO,
+    SubmitDecisionRequest,
 )
 from application.evaluators.composite_evaluator import CompositeEvaluator
+from application.evaluators.matrix_evaluator import MatrixEvaluator
 from application.use_cases import (
     EvaluateScenarioUseCase,
+    GetCaseStudyUseCase,
+    GetDecisionImpactUseCase,
     GetScenarioUseCase,
+    ListCaseStudiesUseCase,
     ListScenariosUseCase,
+    SubmitDecisionUseCase,
 )
 
 __all__ = [
+    "CaseStudyDTO",
+    "CaseStudySummaryDTO",
     "CompositeEvaluator",
     "CreateScenarioRequest",
+    "DecisionImpactResponseDTO",
+    "DecisionOptionDTO",
+    "DimensionScoreDTO",
     "EthicalAssessmentDTO",
     "EthicalFindingDTO",
     "EvaluateScenarioRequest",
+    "EvaluateScenarioUseCase",
     "EvaluationMetricDTO",
     "FrameworkAssessmentDTO",
+    "GetCaseStudyUseCase",
+    "GetDecisionImpactUseCase",
     "GetScenarioUseCase",
     "LinguisticArtifactDTO",
+    "ListCaseStudiesUseCase",
     "ListScenariosUseCase",
+    "MatrixEvaluator",
+    "MultidimensionalMatrixDTO",
     "ScenarioDTO",
-    "EvaluateScenarioUseCase",
+    "StandardErrorDetailDTO",
+    "StandardErrorResponseDTO",
+    "SubmitDecisionRequest",
+    "SubmitDecisionUseCase",
 ]

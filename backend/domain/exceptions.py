@@ -16,6 +16,25 @@ class ScenarioNotFoundError(DomainError):
         super().__init__(f"Scenario with id '{scenario_id}' was not found.")
 
 
+class CaseStudyNotFoundError(DomainError):
+    """EN: Raised when a requested case study is not found. | ES: Se lanza cuando no se encuentra un caso de estudio solicitado."""
+
+    def __init__(self, case_id: str) -> None:
+        # EN: Initialize error with missing case identifier | ES: Inicializar error con identificador de caso faltante
+        self.case_id = case_id
+        super().__init__(f"Case study with id '{case_id}' was not found.")
+
+
+class InvalidDecisionOptionError(DomainError):
+    """EN: Raised when an invalid or nonexistent decision option is submitted. | ES: Se lanza cuando se envia una opcion de decision invalida o inexistente."""
+
+    def __init__(self, case_id: str, option_id: str) -> None:
+        # EN: Initialize error with invalid option details | ES: Inicializar error con detalles de opcion invalida
+        self.case_id = case_id
+        self.option_id = option_id
+        super().__init__(f"Option '{option_id}' is invalid for case study '{case_id}'.")
+
+
 class InvalidMetricValueError(DomainError):
     """EN: Raised when a calculated or provided metric is outside valid bounds. | ES: Se lanza cuando una metrica calculada o provista esta fuera de los limites validos."""
 
