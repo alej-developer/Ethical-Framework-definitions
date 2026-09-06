@@ -1,0 +1,58 @@
+# EN: Configuration file for backend dependencies, build system, and quality tooling | ES: Archivo de configuracion para dependencias de backend, sistema de construccion y herramientas de calidad
+
+[tool.poetry]
+name = "ai-ethics-simulator-backend"
+version = "0.1.0"
+description = "Clean Architecture Backend for the AI Ethics Interactive Simulator"
+authors = ["AI Ethics Engineering Team <ethics-simulator@example.org>"]
+readme = "README.md"
+packages = [
+    { include = "domain" },
+    { include = "application" },
+    { include = "infrastructure" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+uvicorn = { extras = ["standard"], version = "^0.30.0" }
+pydantic = "^2.8.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-asyncio = "^0.24.0"
+mypy = "^1.11.0"
+ruff = "^0.6.0"
+httpx = "^0.27.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# EN: Strict static typing configuration with Mypy | ES: Configuracion estricta de tipado estatico con Mypy
+[tool.mypy]
+python_version = "3.11"
+strict = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+
+# EN: Code linting and formatting configuration with Ruff | ES: Configuracion de analisis de codigo y formateo con Ruff
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "C4", "UP", "SIM"]
+ignore = ["E501"]
+
+# EN: Test runner configuration with Pytest | ES: Configuracion del ejecutor de pruebas con Pytest
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"

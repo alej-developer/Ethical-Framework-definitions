@@ -1,0 +1,54 @@
+# EN: Git ignore rules for Python, Node, and IDE artifacts | ES: Reglas de git ignore para artefactos de Python, Node e IDE
+
+# EN: Python virtual environments and caches | ES: Entornos virtuales y caches de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# EN: Testing and linting caches | ES: Caches de testing y linting
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# EN: Node and frontend artifacts | ES: Artefactos de Node y frontend
+node_modules/
+frontend/dist/
+frontend/node_modules/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# EN: Environment variables and local configs | ES: Variables de entorno y configuraciones locales
+.env
+.env.local
+.env.*.local
+
+# EN: IDE and OS metadata | ES: Metadatos de IDE y sistema operativo
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
