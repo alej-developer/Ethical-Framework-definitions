@@ -2,7 +2,6 @@
 
 **Author**: Alejandro Peña (`alej-developer`)  
 **Contact**: josealepm24@gmail.com  
-**Affiliation**: Department of Computational Linguistics and AI Safety Engineering  
 **Project**: AI Ethics Interactive Simulator  
 **Publication Standard**: American Psychological Association (APA) 7th Edition  
 **Date**: September 2026  

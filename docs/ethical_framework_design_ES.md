@@ -2,7 +2,6 @@
 
 **Autor**: Alejandro Peña (`alej-developer`)  
 **Contacto**: josealepm24@gmail.com  
-**Filiación**: Departamento de Lingüística Computacional e Ingeniería de Seguridad en IA  
 **Proyecto**: Simulador Interactivo de Ética en IA  
 **Normativa de Publicación**: American Psychological Association (APA) 7.ª Edición  
 **Fecha**: Septiembre de 2026  
