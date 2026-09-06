@@ -1,9 +1,10 @@
 /** EN: HTTP API client service for interacting with the Clean Architecture backend. | ES: Servicio de cliente API HTTP para interactuar con el backend de Arquitectura Limpia. */
 
 import {
-  EthicalAssessment,
-  FrameworkMetadata,
-  Scenario,
+  CaseStudy,
+  CaseStudySummary,
+  DecisionImpactResponse,
+  StandardErrorResponse,
 } from "../types/index.ts";
 
 const BASE_URL = "/api/v1";
@@ -18,55 +19,63 @@ export class ApiService {
     return response.json();
   }
 
-  public static async fetchFrameworks(): Promise<FrameworkMetadata[]> {
-    // EN: Retrieve supported ethical frameworks | ES: Recuperar marcos eticos soportados
-    const response = await fetch(`${BASE_URL}/frameworks`);
+  public static async fetchCaseStudies(): Promise<CaseStudySummary[]> {
+    // EN: Retrieve all complex computational linguistics case studies | ES: Recuperar todos los casos de estudio complejos de linguistica computacional
+    const response = await fetch(`${BASE_URL}/cases`);
     if (!response.ok) {
-      throw new Error(`Failed to load frameworks: HTTP ${response.status}`);
+      throw new Error(`Failed to load case studies: HTTP ${response.status}`);
     }
     return response.json();
   }
 
-  public static async fetchScenarios(): Promise<Scenario[]> {
-    // EN: Retrieve all computational linguistics benchmark scenarios | ES: Recuperar todos los escenarios de referencia de linguistica computacional
-    const response = await fetch(`${BASE_URL}/scenarios`);
+  public static async fetchCaseStudy(caseId: string): Promise<CaseStudy> {
+    // EN: Fetch detailed specification and decision tree for a single case | ES: Obtener especificacion detallada y arbol de decision para un solo caso
+    const response = await fetch(`${BASE_URL}/cases/${encodeURIComponent(caseId)}`);
     if (!response.ok) {
-      throw new Error(`Failed to load scenarios: HTTP ${response.status}`);
+      const errJson = (await response.json().catch(() => ({}))) as StandardErrorResponse;
+      const msg = errJson.error?.message || `Failed to load case study ${caseId}: HTTP ${response.status}`;
+      throw new Error(msg);
     }
     return response.json();
   }
 
-  public static async fetchScenario(scenarioId: string): Promise<Scenario> {
-    // EN: Fetch single scenario by unique key | ES: Obtener un unico escenario por clave unica
-    const response = await fetch(`${BASE_URL}/scenarios/${encodeURIComponent(scenarioId)}`);
-    if (!response.ok) {
-      throw new Error(`Failed to load scenario ${scenarioId}: HTTP ${response.status}`);
-    }
-    return response.json();
-  }
-
-  public static async evaluateScenario(
-    scenarioId: string,
-    frameworks: string[],
-  ): Promise<EthicalAssessment> {
-    // EN: Dispatch ethical audit simulation request | ES: Despachar solicitud de simulacion de auditoria etica
-    const response = await fetch(`${BASE_URL}/evaluations`, {
+  public static async submitDecision(
+    caseId: string,
+    selectedOptionId: string,
+    userRationale: string,
+    frameworks: string[] = ["EU_AI_ACT", "IEEE_7000_SERIES"],
+    customWeights?: Record<string, number>,
+  ): Promise<DecisionImpactResponse> {
+    // EN: Dispatch ethical decision and calculate multidimensional impact | ES: Despachar decision etica y calcular impacto multidimensional
+    const response = await fetch(`${BASE_URL}/decisions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        scenario_id: scenarioId,
+        case_id: caseId,
+        selected_option_id: selectedOptionId,
+        user_rationale: userRationale,
         frameworks,
+        custom_weights: customWeights,
       }),
     });
 
     if (!response.ok) {
-      const errorBody = await response.json().catch(() => ({}));
-      const message = (errorBody as { detail?: string }).detail || `Evaluation failed with HTTP ${response.status}`;
-      throw new Error(message);
+      const errJson = (await response.json().catch(() => ({}))) as StandardErrorResponse;
+      const msg = errJson.error?.message || `Decision submission failed with HTTP ${response.status}`;
+      throw new Error(msg);
     }
 
+    return response.json();
+  }
+
+  public static async fetchEvaluation(evaluationId: string): Promise<DecisionImpactResponse> {
+    // EN: Retrieve previously stored decision evaluation result | ES: Recuperar resultado de evaluacion de decision previamente guardado
+    const response = await fetch(`${BASE_URL}/evaluations/${encodeURIComponent(evaluationId)}`);
+    if (!response.ok) {
+      throw new Error(`Evaluation '${evaluationId}' not found: HTTP ${response.status}`);
+    }
     return response.json();
   }
 }

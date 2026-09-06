@@ -1,4 +1,6 @@
-/** EN: TypeScript type definitions for domain entities and application state. | ES: Definiciones de tipos TypeScript para entidades de dominio y estado de la aplicacion. */
+/** EN: TypeScript type definitions for domain entities, API payloads, and UI application state. | ES: Definiciones de tipos TypeScript para entidades de dominio, cargas API y estado de la aplicacion UI. */
+
+export type Language = "en" | "es";
 
 export type RiskTier =
   | "UNACCEPTABLE_RISK"
@@ -21,14 +23,53 @@ export interface LinguisticArtifact {
   confidence_score: number;
 }
 
-export interface Scenario {
+export interface DecisionOption {
   id: string;
   title: string;
   description: string;
+  strategy: string;
+  dimension_modifiers: Record<string, number>;
+  rationale: string;
+}
+
+export interface CaseStudySummary {
+  id: string;
+  title: string;
+  nlp_domain: string;
+  dilemma: string;
   domain_category: string;
   task_type: string;
-  artifacts: LinguisticArtifact[];
+  available_options_count: number;
+}
+
+export interface CaseStudy {
+  id: string;
+  title: string;
+  nlp_domain: string;
+  dilemma: string;
+  context_description: string;
+  task_type: string;
+  domain_category: string;
+  linguistic_artifacts: LinguisticArtifact[];
+  baseline_matrix: Record<string, number>;
+  decision_options: DecisionOption[];
+  regulatory_implications: Record<string, string>;
   metadata: Record<string, unknown>;
+}
+
+export interface DimensionScore {
+  dimension: string;
+  baseline_score: number;
+  decision_score: number;
+  delta: number;
+  rationale: string;
+}
+
+export interface MultidimensionalMatrix {
+  transparency: DimensionScore;
+  accountability: DimensionScore;
+  fairness: DimensionScore;
+  overall_alignment: number;
 }
 
 export interface EvaluationMetric {
@@ -56,6 +97,29 @@ export interface FrameworkAssessment {
   recommendations: string[];
 }
 
+export interface DecisionImpactResponse {
+  decision_id: string;
+  case_id: string;
+  selected_option: DecisionOption;
+  matrix: MultidimensionalMatrix;
+  framework_assessments: FrameworkAssessment[];
+  overall_risk_tier: RiskTier;
+  overall_compliance: ComplianceStatus;
+  trade_off_analysis: string;
+  recommendations: string[];
+  created_at: string;
+}
+
+export interface Scenario {
+  id: string;
+  title: string;
+  description: string;
+  domain_category: string;
+  task_type: string;
+  artifacts: LinguisticArtifact[];
+  metadata: Record<string, unknown>;
+}
+
 export interface EthicalAssessment {
   id: string;
   scenario_id: string;
@@ -66,18 +130,25 @@ export interface EthicalAssessment {
   executive_summary: string;
 }
 
-export interface FrameworkMetadata {
-  id: string;
-  name: string;
-  jurisdiction: string;
-  focus_areas: string[];
+export interface StandardErrorResponse {
+  error: {
+    code: string;
+    message: string;
+    status_code: number;
+    details?: unknown;
+    timestamp: string;
+  };
 }
 
 export interface AppState {
-  scenarios: Scenario[];
-  selectedScenarioId: string | null;
+  language: Language;
+  cases: CaseStudySummary[];
+  selectedCaseId: string | null;
+  currentCase: CaseStudy | null;
+  selectedOptionId: string | null;
+  userRationale: string;
   selectedFrameworks: string[];
-  currentAssessment: EthicalAssessment | null;
+  latestImpact: DecisionImpactResponse | null;
   isLoading: boolean;
   errorMessage: string | null;
 }

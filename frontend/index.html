@@ -3,41 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Ethics Interactive Simulator | Clean Architecture</title>
+    <title>AI Ethics Interactive Simulator | Clean Architecture & WCAG AA</title>
     <meta 
       name="description" 
-      content="Interactive AI Ethics Simulator auditing Computational Linguistics against EU AI Act and IEEE standards." 
+      content="Brutally minimalist interactive AI Ethics Simulator auditing Computational Linguistics against EU AI Act, IEEE standards, and multidimensional matrix." 
     />
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body>
-    <header class="app-header">
-      <div class="header-inner">
-        <div>
-          <h1 class="brand-title">AI Ethics Interactive Simulator</h1>
-          <p class="brand-subtitle">EN: Computational Linguistics Compliance Engine | ES: Motor de Cumplimiento para Linguistica Computacional</p>
-        </div>
-        <div class="header-status">
-          <span class="status-pill">Clean Architecture / SOLID</span>
-        </div>
-      </div>
-    </header>
+    <!-- EN: Accessibility Skip Link for Keyboard Navigators | ES: Enlace de salto de accesibilidad para navegacion por teclado -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <main class="app-container">
-      <section class="panel-card" aria-labelledby="heading-scenarios">
-        <h2 id="heading-scenarios" class="panel-title">1. Computational Linguistics Scenarios</h2>
-        <div id="scenario-selector-root"></div>
-      </section>
+    <!-- EN: Header Root Container | ES: Contenedor raiz de la cabecera -->
+    <div id="header-root"></div>
 
-      <section class="panel-card" aria-labelledby="heading-frameworks">
-        <h2 id="heading-frameworks" class="panel-title">2. Ethical Framework Selection & Directives</h2>
-        <div id="framework-selector-root"></div>
-      </section>
-
-      <section class="panel-card" aria-labelledby="heading-assessment">
-        <h2 id="heading-assessment" class="panel-title">3. Audit Evaluation & Statutory Risk Analysis</h2>
-        <div id="assessment-view-root"></div>
-      </section>
+    <!-- EN: Main Application Split-Pane Container | ES: Contenedor principal de panel dividido de la aplicacion -->
+    <main id="main-content" class="main-wrapper" tabindex="-1">
+      <div id="split-pane-root"></div>
     </main>
 
     <script type="module" src="/src/main.ts"></script>
