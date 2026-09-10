@@ -1,6 +1,8 @@
 """EN: Domain layer package exports for AI ethics evaluation engine. | ES: Exportaciones del paquete de la capa de dominio para el motor de evaluacion de etica en IA."""
 
 from domain.entities import (
+    AlignmentStatus,
+    BindingLevel,
     CaseStudy,
     ComplianceStatus,
     DecisionImpactResult,
@@ -11,6 +13,7 @@ from domain.entities import (
     EthicalFinding,
     EvaluationMetric,
     FrameworkAssessment,
+    FrameworkRegion,
     FrameworkType,
     LinguisticArtifact,
     MultidimensionalMatrix,
@@ -36,6 +39,8 @@ from domain.interfaces import (
 )
 
 __all__ = [
+    "AlignmentStatus",
+    "BindingLevel",
     "CaseStudy",
     "CaseStudyNotFoundError",
     "ComplianceStatus",
@@ -48,6 +53,7 @@ __all__ = [
     "EthicalFinding",
     "EvaluationMetric",
     "FrameworkAssessment",
+    "FrameworkRegion",
     "FrameworkType",
     "IAssessmentRepository",
     "ICaseStudyRepository",
