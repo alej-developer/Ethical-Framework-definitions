@@ -34,10 +34,49 @@ class TaskType(str, Enum):
     CONTENT_MODERATION = "CONTENT_MODERATION"
 
 
+class FrameworkRegion(str, Enum):
+    """EN: Geographic region classification for regulatory frameworks. | ES: Clasificacion de region geografica para marcos regulatorios."""
+
+    EUROPE = "EUROPE"
+    AMERICAS = "AMERICAS"
+    ASIA_PACIFIC = "ASIA_PACIFIC"
+    AFRICA = "AFRICA"
+    INTERNATIONAL = "INTERNATIONAL"
+
+
+class BindingLevel(str, Enum):
+    """EN: Legal binding level of a regulatory framework. | ES: Nivel de vinculacion legal de un marco regulatorio."""
+
+    LEGALLY_BINDING = "LEGALLY_BINDING"
+    VOLUNTARY_STANDARD = "VOLUNTARY_STANDARD"
+    PROPOSED_LEGISLATION = "PROPOSED_LEGISLATION"
+
+
+class AlignmentStatus(str, Enum):
+    """EN: Alignment verdict for voluntary or soft-law frameworks. | ES: Veredicto de alineacion para marcos voluntarios o de soft-law."""
+
+    FULLY_ALIGNED = "FULLY_ALIGNED"
+    SUBSTANTIALLY_ALIGNED = "SUBSTANTIALLY_ALIGNED"
+    PARTIALLY_ALIGNED = "PARTIALLY_ALIGNED"
+    NOT_ALIGNED = "NOT_ALIGNED"
+
+
 class FrameworkType(str, Enum):
     """EN: Supported ethical frameworks for algorithmic evaluation. | ES: Marcos eticos soportados para evaluacion algoritmica."""
 
+    # EN: Europe | ES: Europa
     EU_AI_ACT = "EU_AI_ACT"
+    UK_AI_GOVERNANCE = "UK_AI_GOVERNANCE"
+    # EN: Americas | ES: Americas
+    NIST_AI_RMF = "NIST_AI_RMF"
+    BRAZIL_PL_2338 = "BRAZIL_PL_2338"
+    # EN: Asia-Pacific | ES: Asia-Pacifico
+    KOREA_AI_BASIC_ACT = "KOREA_AI_BASIC_ACT"
+    CHINA_AI_REGULATIONS = "CHINA_AI_REGULATIONS"
+    JAPAN_AI_ACT = "JAPAN_AI_ACT"
+    SINGAPORE_AI_GOVERNANCE = "SINGAPORE_AI_GOVERNANCE"
+    INDIA_DPDP_AI = "INDIA_DPDP_AI"
+    # EN: International Standards | ES: Estandares Internacionales
     IEEE_7000_SERIES = "IEEE_7000_SERIES"
 
 
@@ -98,6 +137,9 @@ class FrameworkAssessment:
     metrics: list[EvaluationMetric]
     findings: list[EthicalFinding]
     recommendations: list[str]
+    binding_level: BindingLevel = BindingLevel.LEGALLY_BINDING
+    alignment_status: AlignmentStatus | None = None
+    region: FrameworkRegion | None = None
 
 
 @dataclass
