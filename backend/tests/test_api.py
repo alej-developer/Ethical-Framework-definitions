@@ -179,3 +179,12 @@ def test_evaluate_scenario_exposes_regional_fields() -> None:
     assert ieee["region"] == "INTERNATIONAL"
     assert ieee["binding_level"] == "VOLUNTARY_STANDARD"
     assert ieee["alignment_status"] is not None
+
+
+def test_evaluate_scenario_defaults_to_all_frameworks() -> None:
+    """EN: Omitting frameworks evaluates against every supported framework. | ES: Omitir los marcos evalua contra todos los marcos soportados."""
+    response = client.post("/api/v1/evaluations", json={"scenario_id": "cs-recruitment-llm-001"})
+    assert response.status_code == 201
+
+    evaluated = {fa["framework"] for fa in response.json()["framework_assessments"]}
+    assert evaluated == {ft.value for ft in FrameworkType}

@@ -5,6 +5,13 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from domain.entities import FrameworkType
+
+
+def _all_framework_ids() -> list[str]:
+    """EN: Default target frameworks: every supported framework. | ES: Marcos objetivo por defecto: todos los marcos soportados."""
+    return [framework.value for framework in FrameworkType]
+
 
 class EvaluationMetricDTO(BaseModel):
     """EN: DTO representation of an individual quantified metric. | ES: Representacion DTO de una metrica cuantificada individual."""
@@ -92,7 +99,7 @@ class EvaluateScenarioRequest(BaseModel):
 
     scenario_id: str = Field(..., description="Unique scenario identifier")
     frameworks: list[str] = Field(
-        default_factory=lambda: ["EU_AI_ACT", "IEEE_7000_SERIES"],
+        default_factory=_all_framework_ids,
         description="Target frameworks for evaluation",
     )
 
@@ -169,7 +176,7 @@ class SubmitDecisionRequest(BaseModel):
         default=None, description="Optional custom dimension weights for matrix evaluation"
     )
     frameworks: list[str] = Field(
-        default_factory=lambda: ["EU_AI_ACT", "IEEE_7000_SERIES"],
+        default_factory=_all_framework_ids,
         description="International frameworks to cross-evaluate against",
     )
 
