@@ -130,3 +130,31 @@ def test_evaluate_scenario_success() -> None:
     assessment = response.json()
     assert assessment["scenario_id"] == "cs-recruitment-llm-001"
     assert len(assessment["framework_assessments"]) == 2
+
+
+def test_evaluate_scenario_exposes_regional_fields() -> None:
+    """EN: Test evaluation response exposes region, binding level and alignment status. | ES: Probar que la respuesta de evaluacion exponga region, nivel de vinculacion y estado de alineacion."""
+    payload = {
+        "scenario_id": "cs-recruitment-llm-001",
+        "frameworks": ["EU_AI_ACT", "NIST_AI_RMF", "IEEE_7000_SERIES"],
+    }
+    response = client.post("/api/v1/evaluations", json=payload)
+    assert response.status_code == 201
+
+    by_framework = {fa["framework"]: fa for fa in response.json()["framework_assessments"]}
+    assert set(by_framework) == {"EU_AI_ACT", "NIST_AI_RMF", "IEEE_7000_SERIES"}
+
+    eu = by_framework["EU_AI_ACT"]
+    assert eu["region"] == "EUROPE"
+    assert eu["binding_level"] == "LEGALLY_BINDING"
+    assert eu["alignment_status"] is None
+
+    nist = by_framework["NIST_AI_RMF"]
+    assert nist["region"] == "AMERICAS"
+    assert nist["binding_level"] == "VOLUNTARY_STANDARD"
+    assert nist["alignment_status"] is not None
+
+    ieee = by_framework["IEEE_7000_SERIES"]
+    assert ieee["region"] == "INTERNATIONAL"
+    assert ieee["binding_level"] == "VOLUNTARY_STANDARD"
+    assert ieee["alignment_status"] is not None

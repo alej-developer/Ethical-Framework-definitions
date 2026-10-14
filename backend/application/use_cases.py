@@ -104,6 +104,9 @@ class EvaluateScenarioUseCase:
                     metrics=metric_dtos,
                     findings=finding_dtos,
                     recommendations=fa.recommendations,
+                    binding_level=fa.binding_level.value,
+                    alignment_status=fa.alignment_status.value if fa.alignment_status else None,
+                    region=fa.region.value if fa.region else None,
                 )
             )
 
@@ -429,6 +432,9 @@ class SubmitDecisionUseCase:
                     metrics=m_dtos,
                     findings=f_dtos,
                     recommendations=fa.recommendations,
+                    binding_level=fa.binding_level.value,
+                    alignment_status=fa.alignment_status.value if fa.alignment_status else None,
+                    region=fa.region.value if fa.region else None,
                 )
             )
 

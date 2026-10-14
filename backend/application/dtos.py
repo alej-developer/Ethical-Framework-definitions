@@ -41,6 +41,9 @@ class FrameworkAssessmentDTO(BaseModel):
     metrics: list[EvaluationMetricDTO]
     findings: list[EthicalFindingDTO]
     recommendations: list[str]
+    binding_level: str = Field(default="LEGALLY_BINDING", description="Legal binding level of the framework")
+    alignment_status: str | None = Field(default=None, description="Alignment verdict for non-binding frameworks")
+    region: str | None = Field(default=None, description="Geographic region of the framework")
 
 
 class EthicalAssessmentDTO(BaseModel):
