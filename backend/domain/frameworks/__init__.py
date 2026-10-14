@@ -1,6 +1,46 @@
-"""EN: Ethical framework package initialization. | ES: Inicializacion del paquete de marcos eticos."""
+"""EN: Ethical framework package initialization aggregating regional evaluators. | ES: Inicializacion del paquete de marcos eticos que agrega los evaluadores regionales."""
 
-from domain.frameworks.eu_ai_act import EUAIActEvaluator
-from domain.frameworks.ieee_standards import IEEEStandardsEvaluator
+from domain.frameworks.americas import BrazilPL2338Evaluator, NISTAIRMFEvaluator
+from domain.frameworks.asia_pacific import (
+    ChinaAIRegulationsEvaluator,
+    IndiaDPDPAIEvaluator,
+    JapanAIActEvaluator,
+    KoreaAIBasicActEvaluator,
+    SingaporeAIGovernanceEvaluator,
+)
+from domain.frameworks.base import BaseFrameworkEvaluator
+from domain.frameworks.europe import EUAIActEvaluator, UKAIGovernanceEvaluator
+from domain.frameworks.international import IEEEStandardsEvaluator
+from domain.interfaces import IEthicalEvaluator
 
-__all__ = ["EUAIActEvaluator", "IEEEStandardsEvaluator"]
+
+def build_default_evaluators() -> list[IEthicalEvaluator]:
+    """EN: Instantiate every implemented framework evaluator. | ES: Instanciar todos los evaluadores de marcos implementados."""
+    return [
+        EUAIActEvaluator(),
+        UKAIGovernanceEvaluator(),
+        NISTAIRMFEvaluator(),
+        BrazilPL2338Evaluator(),
+        KoreaAIBasicActEvaluator(),
+        ChinaAIRegulationsEvaluator(),
+        JapanAIActEvaluator(),
+        SingaporeAIGovernanceEvaluator(),
+        IndiaDPDPAIEvaluator(),
+        IEEEStandardsEvaluator(),
+    ]
+
+
+__all__ = [
+    "BaseFrameworkEvaluator",
+    "BrazilPL2338Evaluator",
+    "ChinaAIRegulationsEvaluator",
+    "EUAIActEvaluator",
+    "IEEEStandardsEvaluator",
+    "IndiaDPDPAIEvaluator",
+    "JapanAIActEvaluator",
+    "KoreaAIBasicActEvaluator",
+    "NISTAIRMFEvaluator",
+    "SingaporeAIGovernanceEvaluator",
+    "UKAIGovernanceEvaluator",
+    "build_default_evaluators",
+]

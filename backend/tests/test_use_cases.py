@@ -30,8 +30,8 @@ from domain.exceptions import (
     ScenarioNotFoundError,
     UnsupportedFrameworkError,
 )
-from domain.frameworks.eu_ai_act import EUAIActEvaluator
-from domain.frameworks.ieee_standards import IEEEStandardsEvaluator
+from domain.frameworks.europe.eu_ai_act import EUAIActEvaluator
+from domain.frameworks.international.ieee_standards import IEEEStandardsEvaluator
 from domain.interfaces import (
     IAssessmentRepository,
     ICaseStudyRepository,

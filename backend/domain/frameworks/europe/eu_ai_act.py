@@ -1,10 +1,12 @@
 """EN: EU AI Act (Regulation EU 2024/1689) ethical evaluator for computational linguistics. | ES: Evaluador etico de la Ley de IA de la UE (Reglamento UE 2024/1689) para linguistica computacional."""
 
 from domain.entities import (
+    BindingLevel,
     ComplianceStatus,
     EthicalFinding,
     EvaluationMetric,
     FrameworkAssessment,
+    FrameworkRegion,
     FrameworkType,
     RiskTier,
     Scenario,
@@ -45,6 +47,9 @@ class EUAIActEvaluator(IEthicalEvaluator):
             metrics=metrics,
             findings=findings,
             recommendations=recommendations,
+            binding_level=BindingLevel.LEGALLY_BINDING,
+            alignment_status=None,
+            region=FrameworkRegion.EUROPE,
         )
 
     def _classify_risk_tier(self, scenario: Scenario) -> RiskTier:

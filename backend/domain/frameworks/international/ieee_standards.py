@@ -1,10 +1,13 @@
 """EN: IEEE 7000 and 7001 standards ethical evaluator for computational linguistics systems. | ES: Evaluador etico de normas IEEE 7000 y 7001 para sistemas de linguistica computacional."""
 
 from domain.entities import (
+    AlignmentStatus,
+    BindingLevel,
     ComplianceStatus,
     EthicalFinding,
     EvaluationMetric,
     FrameworkAssessment,
+    FrameworkRegion,
     FrameworkType,
     RiskTier,
     Scenario,
@@ -42,7 +45,21 @@ class IEEEStandardsEvaluator(IEthicalEvaluator):
             metrics=metrics,
             findings=findings,
             recommendations=recommendations,
+            binding_level=BindingLevel.VOLUNTARY_STANDARD,
+            alignment_status=self._derive_alignment(compliance_status),
+            region=FrameworkRegion.INTERNATIONAL,
         )
+
+    @staticmethod
+    def _derive_alignment(compliance_status: ComplianceStatus) -> AlignmentStatus:
+        """EN: Map compliance verdict to soft-law alignment. | ES: Mapear el veredicto de cumplimiento a alineacion de soft-law."""
+        mapping = {
+            ComplianceStatus.COMPLIANT: AlignmentStatus.FULLY_ALIGNED,
+            ComplianceStatus.PARTIALLY_COMPLIANT: AlignmentStatus.PARTIALLY_ALIGNED,
+            ComplianceStatus.NON_COMPLIANT: AlignmentStatus.NOT_ALIGNED,
+            ComplianceStatus.PROHIBITED: AlignmentStatus.NOT_ALIGNED,
+        }
+        return mapping[compliance_status]
 
     def _calculate_metrics(self, scenario: Scenario) -> list[EvaluationMetric]:
         """EN: Calculate IEEE 7000/7001 quantitative metrics. | ES: Calcular metricas cuantitativas de IEEE 7000/7001."""

@@ -24,8 +24,7 @@ from application.use_cases import (
     ListScenariosUseCase,
     SubmitDecisionUseCase,
 )
-from domain.frameworks.eu_ai_act import EUAIActEvaluator
-from domain.frameworks.ieee_standards import IEEEStandardsEvaluator
+from domain.frameworks import build_default_evaluators
 from infrastructure.repositories.in_memory_repository import (
     InMemoryAssessmentRepository,
     InMemoryCaseStudyRepository,
@@ -41,7 +40,7 @@ _scenario_repo = InMemoryScenarioRepository(_case_study_repo)
 _assessment_repo = InMemoryAssessmentRepository()
 _decision_impact_repo = InMemoryDecisionImpactRepository()
 _matrix_evaluator = MatrixEvaluator()
-_composite_evaluator = CompositeEvaluator(evaluators=[EUAIActEvaluator(), IEEEStandardsEvaluator()])
+_composite_evaluator = CompositeEvaluator(evaluators=build_default_evaluators())
 
 
 # EN: Dependency provider functions | ES: Funciones proveedoras de dependencias
