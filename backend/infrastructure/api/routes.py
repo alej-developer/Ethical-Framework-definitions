@@ -24,6 +24,7 @@ from application.use_cases import (
     ListScenariosUseCase,
     SubmitDecisionUseCase,
 )
+from domain.entities import BindingLevel, FrameworkRegion, FrameworkType
 from domain.frameworks import build_default_evaluators
 from infrastructure.repositories.in_memory_repository import (
     InMemoryAssessmentRepository,
@@ -116,30 +117,132 @@ def health_check() -> dict[str, str]:
 )
 def list_frameworks() -> list[dict[str, Any]]:
     """EN: Return metadata and descriptions for supported ethical evaluation frameworks. | ES: Retornar metadatos y descripciones para los marcos de evaluacion etica soportados."""
-    return [
-        {
-            "id": "EU_AI_ACT",
-            "name": "EU Artificial Intelligence Act (Regulation EU 2024/1689)",
-            "jurisdiction": "European Union",
-            "focus_areas": [
-                "Prohibited AI practices",
-                "High-risk computational linguistics (Annex III)",
-                "Data governance & dialectal non-discrimination (Article 10)",
-                "Linguistic transparency & watermarking (Article 50)",
-            ],
-        },
-        {
-            "id": "IEEE_7000_SERIES",
-            "name": "IEEE 7000-2021 and IEEE 7001-2021 Standards",
-            "jurisdiction": "International",
-            "focus_areas": [
-                "Ethical value-driven system design",
-                "Stakeholder well-being and harm avoidance",
-                "Multi-tiered algorithmic transparency",
-                "Procedural fairness across demographic dialects",
-            ],
-        },
-    ]
+    return [{"id": framework.value, **FRAMEWORK_CATALOGUE[framework]} for framework in FrameworkType]
+
+
+# EN: Presentation metadata per framework; must cover every FrameworkType | ES: Metadatos de presentacion por marco; debe cubrir todos los FrameworkType
+FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
+    FrameworkType.EU_AI_ACT: {
+        "name": "EU Artificial Intelligence Act (Regulation EU 2024/1689)",
+        "jurisdiction": "European Union",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "Prohibited AI practices",
+            "High-risk computational linguistics (Annex III)",
+            "Data governance & dialectal non-discrimination (Article 10)",
+            "Linguistic transparency & watermarking (Article 50)",
+        ],
+    },
+    FrameworkType.UK_AI_GOVERNANCE: {
+        "name": "UK Pro-Innovation AI Regulation Principles (DSIT White Paper, 2023)",
+        "jurisdiction": "United Kingdom",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "Safety, security & robustness",
+            "Appropriate transparency & explainability",
+            "Fairness across linguistic varieties",
+            "Accountability & governance",
+            "Contestability & redress",
+        ],
+    },
+    FrameworkType.NIST_AI_RMF: {
+        "name": "NIST AI Risk Management Framework 1.0 (NIST AI 100-1)",
+        "jurisdiction": "United States",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "GOVERN, MAP, MEASURE and MANAGE functions",
+            "Validity, reliability & safety",
+            "Accountability, transparency & explainability",
+            "Harmful bias management",
+        ],
+    },
+    FrameworkType.BRAZIL_PL_2338: {
+        "name": "Brazil AI Bill (PL 2338/2023)",
+        "jurisdiction": "Brazil",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.PROPOSED_LEGISLATION.value,
+        "focus_areas": [
+            "Excessive-risk prohibitions",
+            "High-risk classification",
+            "Algorithmic impact assessment",
+            "Non-discrimination",
+        ],
+    },
+    FrameworkType.KOREA_AI_BASIC_ACT: {
+        "name": "Korea Framework Act on AI Development and Establishment of Trust (AI Basic Act)",
+        "jurisdiction": "Republic of Korea",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "AI use notice & generative content labeling",
+            "Explanation of high-impact outcomes",
+            "Human oversight of high-impact AI",
+            "Fairness of outcomes",
+        ],
+    },
+    FrameworkType.CHINA_AI_REGULATIONS: {
+        "name": "China Generative AI, Deep Synthesis and AI Content Labeling Rules",
+        "jurisdiction": "People's Republic of China",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "Synthetic content labeling",
+            "Lawful training data",
+            "Content safety",
+            "Non-discrimination",
+        ],
+    },
+    FrameworkType.JAPAN_AI_ACT: {
+        "name": "Japan AI Promotion Act (2025) and AI Guidelines for Business",
+        "jurisdiction": "Japan",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "Human-centricity & safety",
+            "Fairness",
+            "Transparency to stakeholders",
+            "Accountability & traceability",
+        ],
+    },
+    FrameworkType.SINGAPORE_AI_GOVERNANCE: {
+        "name": "Singapore Model AI Governance Framework (incl. Generative AI edition)",
+        "jurisdiction": "Singapore",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "Internal governance",
+            "Human involvement proportionate to risk",
+            "Operations management & bias minimisation",
+            "Stakeholder communication",
+        ],
+    },
+    FrameworkType.INDIA_DPDP_AI: {
+        "name": "India Digital Personal Data Protection Act 2023 (applied to AI)",
+        "jurisdiction": "India",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "Lawful consent & notice",
+            "Data accuracy for automated decisions",
+            "Correction, erasure & grievance rights",
+        ],
+    },
+    FrameworkType.IEEE_7000_SERIES: {
+        "name": "IEEE 7000-2021 and IEEE 7001-2021 Standards",
+        "jurisdiction": "International",
+        "region": FrameworkRegion.INTERNATIONAL.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "Ethical value-driven system design",
+            "Stakeholder well-being and harm avoidance",
+            "Multi-tiered algorithmic transparency",
+            "Procedural fairness across demographic dialects",
+        ],
+    },
+}
 
 
 # EN: Case Studies Endpoints | ES: Puntos Finales de Casos de Estudio

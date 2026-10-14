@@ -2,6 +2,8 @@
 
 from fastapi.testclient import TestClient
 
+from domain.entities import BindingLevel, FrameworkRegion, FrameworkType, Scenario, TaskType
+from domain.frameworks import build_default_evaluators
 from infrastructure.main import app
 
 client = TestClient(app)
@@ -21,10 +23,29 @@ def test_frameworks_endpoint() -> None:
     response = client.get("/api/v1/frameworks")
     assert response.status_code == 200
     frameworks = response.json()
-    assert len(frameworks) == 2
-    framework_ids = [f["id"] for f in frameworks]
-    assert "EU_AI_ACT" in framework_ids
-    assert "IEEE_7000_SERIES" in framework_ids
+    assert {f["id"] for f in frameworks} == {ft.value for ft in FrameworkType}
+    for f in frameworks:
+        assert f["name"] and f["jurisdiction"] and f["focus_areas"]
+        assert f["region"] in {r.value for r in FrameworkRegion}
+        assert f["binding_level"] in {b.value for b in BindingLevel}
+
+
+def test_frameworks_endpoint_matches_evaluator_metadata() -> None:
+    """EN: Catalogue region and binding level match what each evaluator reports. | ES: La region y el nivel de vinculacion del catalogo coinciden con lo que informa cada evaluador."""
+    catalogue = {f["id"]: f for f in client.get("/api/v1/frameworks").json()}
+    scenario = Scenario(
+        id="catalogue-check",
+        title="Catalogue check",
+        description="Neutral scenario.",
+        domain_category="general",
+        task_type=TaskType.TEXT_CLASSIFICATION,
+        artifacts=[],
+    )
+    for evaluator in build_default_evaluators():
+        assessment = evaluator.evaluate(scenario)
+        entry = catalogue[evaluator.framework.value]
+        assert entry["region"] == assessment.region.value
+        assert entry["binding_level"] == assessment.binding_level.value
 
 
 # EN: Case Studies Endpoint Tests | ES: Pruebas de Puntos Finales de Casos de Estudio
