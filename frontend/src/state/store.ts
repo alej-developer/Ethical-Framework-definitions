@@ -5,6 +5,7 @@ import {
   CaseStudy,
   CaseStudySummary,
   DecisionImpactResponse,
+  FrameworkInfo,
   Language,
 } from "../types/index.ts";
 
@@ -56,6 +57,7 @@ const initialAppState: AppState = {
   selectedOptionId: null,
   userRationale: "",
   selectedFrameworks: ["EU_AI_ACT", "IEEE_7000_SERIES"],
+  availableFrameworks: [],
   latestImpact: null,
   isLoading: false,
   errorMessage: null,
@@ -76,6 +78,14 @@ export const actions = {
       selectedCaseId: firstId,
       errorMessage: null,
     });
+  },
+
+  setAvailableFrameworks: (availableFrameworks: FrameworkInfo[]): void => {
+    // EN: Drop selected ids the backend no longer supports, falling back to the first entry | ES: Descartar ids seleccionados que el backend ya no soporta, usando la primera entrada como respaldo
+    const known = new Set(availableFrameworks.map((f) => f.id));
+    const kept = appStore.getState().selectedFrameworks.filter((id) => known.has(id));
+    const selectedFrameworks = kept.length > 0 ? kept : availableFrameworks.slice(0, 1).map((f) => f.id);
+    appStore.setState({ availableFrameworks, selectedFrameworks });
   },
 
   setCurrentCase: (currentCase: CaseStudy): void => {

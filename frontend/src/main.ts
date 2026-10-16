@@ -13,7 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // EN: Bootstrap data from backend REST API | ES: Arrancar datos desde la API REST del backend
   try {
     actions.setLoading(true);
-    const caseSummaries = await ApiService.fetchCaseStudies();
+    const [caseSummaries, frameworks] = await Promise.all([
+      ApiService.fetchCaseStudies(),
+      ApiService.fetchFrameworks(),
+    ]);
+    actions.setAvailableFrameworks(frameworks);
     actions.setCaseList(caseSummaries);
 
     if (caseSummaries.length > 0) {

@@ -30,10 +30,14 @@ export interface Translations {
   rationalePlaceholder: string;
   rationaleMinCharsNote: string;
   frameworksHeading: string;
-  frameworkEU: string;
-  frameworkEUDesc: string;
-  frameworkIEEE: string;
-  frameworkIEEEDesc: string;
+  regionEurope: string;
+  regionAmericas: string;
+  regionAsiaPacific: string;
+  regionAfrica: string;
+  regionInternational: string;
+  bindingLegallyBinding: string;
+  bindingVoluntaryStandard: string;
+  bindingProposedLegislation: string;
   submitButtonText: string;
   evaluatingText: string;
   evaluationResultsHeading: string;
@@ -90,11 +94,15 @@ export const dictionary: Record<Language, Translations> = {
     rationaleHeading: "Decision Justification & Rationale",
     rationalePlaceholder: "Articulate your ethical reasoning and justification for the chosen intervention strategy (minimum 10 characters)...",
     rationaleMinCharsNote: "Minimum 10 characters required for statutory audit logging.",
-    frameworksHeading: "Target Statutory Frameworks",
-    frameworkEU: "EU AI Act (Regulation EU 2024/1689)",
-    frameworkEUDesc: "Prohibited practices, Annex III high-risk compliance, Art. 10 bias parity, Art. 14 oversight.",
-    frameworkIEEE: "IEEE Standards (IEEE Std 7000 & 7001)",
-    frameworkIEEEDesc: "Stakeholder well-being protection, value elicitation, algorithmic transparency index.",
+    frameworksHeading: "Target Regulatory Frameworks",
+    regionEurope: "Europe",
+    regionAmericas: "Americas",
+    regionAsiaPacific: "Asia-Pacific",
+    regionAfrica: "Africa",
+    regionInternational: "International",
+    bindingLegallyBinding: "Binding law",
+    bindingVoluntaryStandard: "Voluntary",
+    bindingProposedLegislation: "Proposed bill",
     submitButtonText: "Execute Ethical Evaluation",
     evaluatingText: "Simulating Impact Across Frameworks...",
     evaluationResultsHeading: "3. Real-Time Impact & Statutory Compliance",
@@ -149,11 +157,15 @@ export const dictionary: Record<Language, Translations> = {
     rationaleHeading: "Justificacion y Razonamiento de la Decision",
     rationalePlaceholder: "Articule su razonamiento etico y justificacion para la estrategia elegida (minimo 10 caracteres)...",
     rationaleMinCharsNote: "Se requieren minimo 10 caracteres para el registro de auditoria estatutaria.",
-    frameworksHeading: "Marcos Estatutarios Objetivo",
-    frameworkEU: "Ley de IA de la UE (Reglamento UE 2024/1689)",
-    frameworkEUDesc: "Practicas prohibidas, alto riesgo Anexo III, paridad de sesgo Art. 10, supervision humana Art. 14.",
-    frameworkIEEE: "Normas IEEE (IEEE Std 7000 y 7001)",
-    frameworkIEEEDesc: "Proteccion del bienestar, elicitacion de valores, indice de transparencia algoritmica.",
+    frameworksHeading: "Marcos Regulatorios Objetivo",
+    regionEurope: "Europa",
+    regionAmericas: "Americas",
+    regionAsiaPacific: "Asia-Pacifico",
+    regionAfrica: "Africa",
+    regionInternational: "Internacional",
+    bindingLegallyBinding: "Ley vinculante",
+    bindingVoluntaryStandard: "Voluntario",
+    bindingProposedLegislation: "Proyecto de ley",
     submitButtonText: "Ejecutar Evaluacion Etica",
     evaluatingText: "Simulando Impacto a Traves de los Marcos...",
     evaluationResultsHeading: "3. Impacto en Tiempo Real y Cumplimiento Estatutario",

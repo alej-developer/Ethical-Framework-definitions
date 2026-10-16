@@ -14,6 +14,26 @@ export type ComplianceStatus =
   | "NON_COMPLIANT"
   | "PROHIBITED";
 
+export type FrameworkRegion = "EUROPE" | "AMERICAS" | "ASIA_PACIFIC" | "AFRICA" | "INTERNATIONAL";
+
+export type BindingLevel = "LEGALLY_BINDING" | "VOLUNTARY_STANDARD" | "PROPOSED_LEGISLATION";
+
+export type AlignmentStatus =
+  | "FULLY_ALIGNED"
+  | "SUBSTANTIALLY_ALIGNED"
+  | "PARTIALLY_ALIGNED"
+  | "NOT_ALIGNED";
+
+/** EN: Framework catalogue entry returned by GET /api/v1/frameworks. | ES: Entrada del catalogo de marcos devuelta por GET /api/v1/frameworks. */
+export interface FrameworkInfo {
+  id: string;
+  name: string;
+  jurisdiction: string;
+  region: FrameworkRegion;
+  binding_level: BindingLevel;
+  focus_areas: string[];
+}
+
 export interface LinguisticArtifact {
   text_sample: string;
   dialect_or_variety: string;
@@ -95,6 +115,9 @@ export interface FrameworkAssessment {
   metrics: EvaluationMetric[];
   findings: EthicalFinding[];
   recommendations: string[];
+  binding_level: BindingLevel;
+  alignment_status: AlignmentStatus | null;
+  region: FrameworkRegion | null;
 }
 
 export interface DecisionImpactResponse {
@@ -148,6 +171,7 @@ export interface AppState {
   selectedOptionId: string | null;
   userRationale: string;
   selectedFrameworks: string[];
+  availableFrameworks: FrameworkInfo[];
   latestImpact: DecisionImpactResponse | null;
   isLoading: boolean;
   errorMessage: string | null;

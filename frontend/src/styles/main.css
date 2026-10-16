@@ -424,6 +424,97 @@ body {
   text-transform: uppercase;
 }
 
+/* EN: Region-Grouped Framework Selector | ES: Selector de Marcos Agrupado por Region */
+.framework-region-group {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.framework-region-group + .framework-region-group {
+  margin-top: var(--space-sm);
+}
+
+.framework-region-legend {
+  font-family: var(--font-family-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+.framework-option {
+  cursor: pointer;
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.framework-option:hover {
+  background: var(--bg-surface-hover);
+  border-left-color: var(--border-strong);
+}
+
+.framework-option:has(.cb-framework:checked) {
+  background: var(--bg-surface-active);
+  border-left-color: var(--border-focus);
+}
+
+.cb-framework {
+  margin-top: 3px;
+  accent-color: var(--border-focus);
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.framework-option-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.framework-option-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.framework-option-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.binding-chip {
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.binding-chip.binding-legally_binding {
+  color: var(--accent-critical);
+  border-color: rgba(229, 62, 62, 0.4);
+}
+
+.binding-chip.binding-proposed_legislation {
+  color: var(--accent-warning);
+  border-color: rgba(214, 158, 46, 0.4);
+}
+
+.binding-chip.binding-voluntary_standard {
+  color: var(--accent-info);
+  border-color: rgba(49, 130, 206, 0.4);
+}
+
 /* EN: Right Pane: Decision Tree & Evaluation | ES: Panel Derecho: Arbol de Decision y Evaluacion */
 .decision-tree-group {
   display: flex;

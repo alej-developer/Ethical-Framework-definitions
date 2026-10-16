@@ -4,6 +4,7 @@ import {
   CaseStudy,
   CaseStudySummary,
   DecisionImpactResponse,
+  FrameworkInfo,
   StandardErrorResponse,
 } from "../types/index.ts";
 
@@ -28,6 +29,15 @@ export class ApiService {
     return response.json();
   }
 
+  public static async fetchFrameworks(): Promise<FrameworkInfo[]> {
+    // EN: Retrieve the catalogue of supported regulatory frameworks | ES: Recuperar el catalogo de marcos regulatorios soportados
+    const response = await fetch(`${BASE_URL}/frameworks`);
+    if (!response.ok) {
+      throw new Error(`Failed to load frameworks: HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
   public static async fetchCaseStudy(caseId: string): Promise<CaseStudy> {
     // EN: Fetch detailed specification and decision tree for a single case | ES: Obtener especificacion detallada y arbol de decision para un solo caso
     const response = await fetch(`${BASE_URL}/cases/${encodeURIComponent(caseId)}`);
@@ -43,7 +53,7 @@ export class ApiService {
     caseId: string,
     selectedOptionId: string,
     userRationale: string,
-    frameworks: string[] = ["EU_AI_ACT", "IEEE_7000_SERIES"],
+    frameworks: string[],
     customWeights?: Record<string, number>,
   ): Promise<DecisionImpactResponse> {
     // EN: Dispatch ethical decision and calculate multidimensional impact | ES: Despachar decision etica y calcular impacto multidimensional

@@ -1,13 +1,31 @@
 /** EN: Right split pane component rendering interactive decision tree, rationale input, and real-time EU AI Act / matrix compliance metrics. | ES: Componente del panel derecho que renderiza el arbol de decision interactivo, entrada de justificacion y metricas de cumplimiento en tiempo real. */
 
-import { getTranslation } from "../i18n/translations.ts";
+import { getTranslation, Translations } from "../i18n/translations.ts";
 import { ApiService } from "../services/api.ts";
 import { actions, appStore } from "../state/store.ts";
 import {
+  BindingLevel,
   CaseStudy,
   DecisionImpactResponse,
+  FrameworkInfo,
+  FrameworkRegion,
   Language,
 } from "../types/index.ts";
+
+// EN: Display order and label keys for regions and binding levels | ES: Orden de visualizacion y claves de etiqueta para regiones y niveles de vinculacion
+const REGION_ORDER: FrameworkRegion[] = ["EUROPE", "AMERICAS", "ASIA_PACIFIC", "AFRICA", "INTERNATIONAL"];
+const REGION_LABEL: Record<FrameworkRegion, keyof Translations> = {
+  EUROPE: "regionEurope",
+  AMERICAS: "regionAmericas",
+  ASIA_PACIFIC: "regionAsiaPacific",
+  AFRICA: "regionAfrica",
+  INTERNATIONAL: "regionInternational",
+};
+const BINDING_LABEL: Record<BindingLevel, keyof Translations> = {
+  LEGALLY_BINDING: "bindingLegallyBinding",
+  VOLUNTARY_STANDARD: "bindingVoluntaryStandard",
+  PROPOSED_LEGISLATION: "bindingProposedLegislation",
+};
 
 export class DecisionPaneComponent {
   private container: HTMLElement;
@@ -28,6 +46,7 @@ export class DecisionPaneComponent {
         state.selectedOptionId,
         state.userRationale,
         state.selectedFrameworks,
+        state.availableFrameworks,
         state.latestImpact,
         state.isLoading,
         state.errorMessage,
@@ -41,13 +60,12 @@ export class DecisionPaneComponent {
     selectedOptionId: string | null,
     rationale: string,
     frameworks: string[],
+    availableFrameworks: FrameworkInfo[],
     impact: DecisionImpactResponse | null,
     isLoading: boolean,
     errorMessage: string | null,
     lang: Language,
   ): void {
-    const isEUSel = frameworks.includes("EU_AI_ACT");
-    const isIEEESel = frameworks.includes("IEEE_7000_SERIES");
     const isRationaleValid = rationale.trim().length >= 10;
     const canSubmit = Boolean(currentCase && selectedOptionId && isRationaleValid && !isLoading);
 
@@ -140,22 +158,7 @@ export class DecisionPaneComponent {
             <!-- EN: Target Frameworks Selector | ES: Selector de Marcos Objetivo -->
             <div class="section-block">
               <span class="section-label">${getTranslation("frameworksHeading", lang)}</span>
-              <div class="regulatory-list">
-                <label class="reg-item" style="cursor: pointer; display: flex; gap: var(--space-xs); align-items: center;">
-                  <input type="checkbox" class="cb-framework" value="EU_AI_ACT" ${isEUSel ? "checked" : ""} />
-                  <div>
-                    <strong>${getTranslation("frameworkEU", lang)}</strong>
-                    <span style="font-size: 0.75rem;">${getTranslation("frameworkEUDesc", lang)}</span>
-                  </div>
-                </label>
-                <label class="reg-item" style="cursor: pointer; display: flex; gap: var(--space-xs); align-items: center;">
-                  <input type="checkbox" class="cb-framework" value="IEEE_7000_SERIES" ${isIEEESel ? "checked" : ""} />
-                  <div>
-                    <strong>${getTranslation("frameworkIEEE", lang)}</strong>
-                    <span style="font-size: 0.75rem;">${getTranslation("frameworkIEEEDesc", lang)}</span>
-                  </div>
-                </label>
-              </div>
+              ${this.renderFrameworkSelector(availableFrameworks, frameworks, lang)}
             </div>
 
             <!-- EN: Submit Evaluation Action | ES: Accion de Envio de Evaluacion -->
@@ -248,6 +251,34 @@ export class DecisionPaneComponent {
     `;
 
     this.attachEventListeners(currentCase, selectedOptionId, rationale, frameworks);
+  }
+
+  private renderFrameworkSelector(available: FrameworkInfo[], selected: string[], lang: Language): string {
+    // EN: Group catalogue entries by region in a fixed order | ES: Agrupar entradas del catalogo por region en orden fijo
+    return REGION_ORDER.map((region) => {
+      const group = available.filter((f) => f.region === region);
+      if (group.length === 0) return "";
+      const items = group
+        .map(
+          (f) => `
+          <label class="reg-item framework-option" for="cb-framework-${f.id}">
+            <input type="checkbox" id="cb-framework-${f.id}" class="cb-framework" value="${f.id}" ${selected.includes(f.id) ? "checked" : ""} />
+            <div class="framework-option-body">
+              <div class="framework-option-title-row">
+                <strong>${f.name}</strong>
+                <span class="meta-chip binding-chip binding-${f.binding_level.toLowerCase()}">${getTranslation(BINDING_LABEL[f.binding_level], lang)}</span>
+              </div>
+              <span class="framework-option-desc">${f.jurisdiction} &middot; ${f.focus_areas.join(" &middot; ")}</span>
+            </div>
+          </label>`,
+        )
+        .join("");
+      return `
+        <fieldset class="framework-region-group">
+          <legend class="framework-region-legend">${getTranslation(REGION_LABEL[region], lang)}</legend>
+          <div class="regulatory-list">${items}</div>
+        </fieldset>`;
+    }).join("");
   }
 
   private renderDimensionCard(name: string, baseline: number, current: number, delta: number): string {
