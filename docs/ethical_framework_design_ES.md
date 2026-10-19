@@ -242,31 +242,31 @@ La Tabla 1 detalla los parámetros cuantitativos de las simulaciones para la tot
 | Caso de Estudio | Estrategia de Decisión | Dimensión | Línea Base | Modificador | Puntuación Final | Variación ($\Delta$) | Alineación Global ($I$) |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Caso 1: Contratación Automatizada** | 1. Maximización de Productividad | Transparencia ($S_T$) | 0.35 | -0.10 | 0.25 | -0.10 | **0.250** |
-| | | Rendición Cuentas ($S_A$) | 0.40 | -0.15 | 0.25 | -0.15 | |
+| | | Rendición de Cuentas ($S_A$) | 0.40 | -0.15 | 0.25 | -0.15 | |
 | | | Equidad ($S_F$) | 0.30 | -0.15 | 0.15 | -0.15 | |
 | | 2. Ofuscación Heurística | Transparencia ($S_T$) | 0.35 | +0.15 | 0.50 | +0.15 | **0.500** |
-| | | Rendición Cuentas ($S_A$) | 0.40 | +0.10 | 0.50 | +0.10 | |
+| | | Rendición de Cuentas ($S_A$) | 0.40 | +0.10 | 0.50 | +0.10 | |
 | | | Equidad ($S_F$) | 0.30 | +0.20 | 0.50 | +0.20 | |
 | | 3. Supervisión Integral Alineada | Transparencia ($S_T$) | 0.35 | +0.45 | 0.80 | +0.45 | **0.833** |
-| | | Rendición Cuentas ($S_A$) | 0.40 | +0.45 | 0.85 | +0.45 | |
+| | | Rendición de Cuentas ($S_A$) | 0.40 | +0.45 | 0.85 | +0.45 | |
 | | | Equidad ($S_F$) | 0.30 | +0.55 | 0.85 | +0.55 | |
 | **Caso 2: Estilometría Forense** | 1. Causa Probable Automatizada | Transparencia ($S_T$) | 0.25 | -0.15 | 0.10 | -0.15 | **0.083** |
-| | | Rendición Cuentas ($S_A$) | 0.30 | -0.25 | 0.05 | -0.25 | |
+| | | Rendición de Cuentas ($S_A$) | 0.30 | -0.25 | 0.05 | -0.25 | |
 | | | Equidad ($S_F$) | 0.35 | -0.25 | 0.10 | -0.25 | |
 | | 2. Peritaje Propietario Opaco | Transparencia ($S_T$) | 0.25 | +0.10 | 0.35 | +0.10 | **0.383** |
-| | | Rendición Cuentas ($S_A$) | 0.30 | +0.10 | 0.40 | +0.10 | |
+| | | Rendición de Cuentas ($S_A$) | 0.30 | +0.10 | 0.40 | +0.10 | |
 | | | Equidad ($S_F$) | 0.35 | +0.05 | 0.40 | +0.05 | |
 | | 3. Protocolo Científico Daubert | Transparencia ($S_T$) | 0.25 | +0.60 | 0.85 | +0.60 | **0.850** |
-| | | Rendición Cuentas ($S_A$) | 0.30 | +0.55 | 0.85 | +0.55 | |
+| | | Rendición de Cuentas ($S_A$) | 0.30 | +0.55 | 0.85 | +0.55 | |
 | | | Equidad ($S_F$) | 0.35 | +0.50 | 0.85 | +0.50 | |
 | **Caso 3: Procedencia de Datos** | 1. Captura Masiva No Regulada | Transparencia ($S_T$) | 0.20 | -0.10 | 0.10 | -0.10 | **0.133** |
-| | | Rendición Cuentas ($S_A$) | 0.25 | -0.15 | 0.10 | -0.15 | |
+| | | Rendición de Cuentas ($S_A$) | 0.25 | -0.15 | 0.10 | -0.15 | |
 | | | Equidad ($S_F$) | 0.35 | -0.15 | 0.20 | -0.15 | |
 | | 2. Portal Reactivo de Reclamación | Transparencia ($S_T$) | 0.20 | +0.20 | 0.40 | +0.20 | **0.433** |
-| | | Rendición Cuentas ($S_A$) | 0.25 | +0.20 | 0.45 | +0.20 | |
+| | | Rendición de Cuentas ($S_A$) | 0.25 | +0.20 | 0.45 | +0.20 | |
 | | | Equidad ($S_F$) | 0.35 | +0.10 | 0.45 | +0.10 | |
 | | 3. Auditoría de Procedencia y Consentimiento | Transparencia ($S_T$) | 0.20 | +0.65 | 0.85 | +0.65 | **0.850** |
-| | | Rendición Cuentas ($S_A$) | 0.25 | +0.60 | 0.85 | +0.60 | |
+| | | Rendición de Cuentas ($S_A$) | 0.25 | +0.60 | 0.85 | +0.60 | |
 | | | Equidad ($S_F$) | 0.35 | +0.50 | 0.85 | +0.50 | |
 
 *Nota*. Las variaciones diferenciales ($\Delta$) expresan desplazamientos respecto a la línea base del caso. La alineación global se computa con ponderaciones equiprobables ($w_T = w_A = w_F = \frac{1}{3}$). Todos los valores numéricos están estrictamente contenidos en el intervalo cerrado $[0.0, 1.0]$.
