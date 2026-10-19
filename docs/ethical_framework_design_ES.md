@@ -1,7 +1,7 @@
 # Marco Pedagógico y Métricas de Evaluación en Lingüística Computacional para la Simulación Interactiva de Ética en IA: Un Enfoque de Modelado de Decisiones Multidimensional
 
 **Autor**: Alejandro Peña (`alej-developer`)  
-**Contacto**: josealepm24@gmail.com  
+**Contacto**: [alej-developer](https://github.com/alej-developer)  
 **Proyecto**: Simulador Interactivo de Ética en IA  
 **Normativa de Publicación**: American Psychological Association (APA) 7.ª Edición  
 **Fecha**: septiembre de 2026  
@@ -171,7 +171,7 @@ Para procesar evaluaciones reactivas en tiempo real sin recargar la interfaz, el
 +-------------------------------------------------------------------------+
 |                  Evaluación Ética Multidimensional                      |
 |                                                                         |
-|      Transparencia (S_T)     Rendición Cuentas (S_A)      Equidad (S_F) |
+|      Transparencia (S_T)     Rendición de Cuentas (S_A)   Equidad (S_F) |
 |      [ Base + Mod_T ]            [ Base + Mod_A ]       [ Base + Mod_F ]|
 |               |                         |                    |          |
 |               +-------------------------+--------------------+          |

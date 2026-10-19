@@ -1,7 +1,7 @@
 # Pedagogical Framework and Computational Linguistics Evaluation Metrics for Interactive AI Ethics Simulation: A Multidimensional Decision-Modeling Approach
 
 **Author**: Alejandro Peña (`alej-developer`)  
-**Contact**: josealepm24@gmail.com  
+**Contact**: [alej-developer](https://github.com/alej-developer)  
 **Project**: AI Ethics Interactive Simulator  
 **Publication Standard**: American Psychological Association (APA) 7th Edition  
 **Date**: September 2026  

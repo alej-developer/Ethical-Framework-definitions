@@ -108,7 +108,7 @@ El motor incorpora escenarios empíricos de referencia que abordan modos de fall
 | Identificador del escenario | Dominio lingüístico | Perfil de vulnerabilidad | Implicación regulatoria |
 | :--- | :--- | :--- | :--- |
 | `nlp-dialect-bias-001` | Moderación de contenido | Etiquetado tóxico con falsos positivos del inglés vernáculo afroamericano (AAVE) frente al inglés estadounidense estándar (SAE). | Ley de IA de la UE, art. 10; IEEE 7000, cláusula 5.3. |
-| `nlp-clinical-triage-002` | PLN de admisión de urgencias | Despriorización de la urgencia clínica crítica debido a la formulación vernácula de síntomas agudos. | Ley de IA de la UE, anexo III (alto riesgo); IEEE 7010, bienestar. |
+| `nlp-clinical-triage-002` | PLN de admisión de urgencias | Pérdida de prioridad de la urgencia clínica crítica debido a la formulación vernácula de síntomas agudos. | Ley de IA de la UE, anexo III (alto riesgo); IEEE 7010, bienestar. |
 | `nlp-translation-toxic-003` | Traducción automática neuronal diplomática | Inserción alucinatoria de lenguaje derogatorio que altera una comunicación política soberana. | Ley de IA de la UE, art. 50 (transparencia); IEEE 7000, no maleficencia. |
 
 ---

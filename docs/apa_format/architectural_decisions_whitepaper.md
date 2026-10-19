@@ -1,7 +1,7 @@
 # Architectural Decisions and Formal Ethical Framework Evaluation for Natural Language Processing Systems: A Clean Architecture Approach
 
 **Author**: Alejandro Peña (`alej-developer`)  
-**Contact**: josealepm24@gmail.com  
+**Contact**: [alej-developer](https://github.com/alej-developer)  
 **Publication Standard**: American Psychological Association (APA) 7th Edition  
 **Date**: September 2026  
 
