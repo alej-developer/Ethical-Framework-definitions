@@ -7,8 +7,10 @@
 
 ---
 
+> **Spanish edition / Edición en español**: [architectural_decisions_whitepaper_ES.md](./architectural_decisions_whitepaper_ES.md)
+
 ## Abstract
-<!-- EN: Abstract synthesizing the architectural philosophy, ethical formalization, and engineering validation. | ES: Resumen que sintetiza la filosofia arquitectonica, la formalizacion etica y la validacion de ingenieria. -->
+<!-- EN: Abstract synthesizing the architectural philosophy, ethical formalization, and engineering validation. | ES: Resumen que sintetiza la filosofía arquitectónica, la formalización ética y la validación de ingeniería. -->
 The increasing integration of Large Language Models (LLMs) and computational linguistics pipelines into high-stakes domains necessitates automated, auditable, and mathematically grounded ethical evaluation frameworks. This paper delineates the architectural design and theoretical formalization of the AI Ethics Interactive Simulator, an enterprise-grade evaluation platform constructed upon the tenets of Clean Architecture and SOLID object-oriented design principles. We bridge regulatory mandates from the European Union Artificial Intelligence Act (Regulation EU 2024/1689) and technical value-alignment guidelines from the Institute of Electrical and Electronics Engineers (IEEE Std 7000-2021 and IEEE Std 7001-2021). By decoupling core ethical domains from application workflows and infrastructure interfaces, our architecture achieves deterministic extensibility, strict static type safety, and verifiable compliance reporting across critical linguistic tasks, including clinical triage, dialectal toxicity moderation, and neural translation hallucination.
 
 *Keywords*: Artificial Intelligence Ethics, Computational Linguistics, Clean Architecture, EU AI Act, IEEE 7000, Algorithmic Bias, Algorithmic Transparency.
@@ -16,7 +18,7 @@ The increasing integration of Large Language Models (LLMs) and computational lin
 ---
 
 ## 1. Introduction and Theoretical Foundations
-<!-- EN: Introduction contextualizing algorithmic harms and regulatory pressures in computational linguistics. | ES: Introduccion que contextualiza los perjuicios algoritmicos y las presiones regulatorias en linguistica computacional. -->
+<!-- EN: Introduction contextualizing algorithmic harms and regulatory pressures in computational linguistics. | ES: Introducción que contextualiza los perjuicios algorítmicos y las presiones regulatorias en lingüística computacional. -->
 Natural Language Processing (NLP) systems do not operate within an axiological vacuum. As demonstrated by Blodgett et al. (2020) and Bender et al. (2021), machine-learned linguistic representations systematically reflect, amplify, and encode socioeconomic asymmetries present in training corpora. When these models are deployed in high-consequence operational spheres—such as emergency triage, asylum classification, judicial sentiment analysis, or automated content moderation—demographic disparities produce measurable allocative and dignitary harms (Crawford, 2017; Floridi et al., 2018).
 
 Historically, software frameworks addressing algorithmic bias and safety have suffered from architectural conflation: evaluation rules, statistical metrics, database interactions, and user interface delivery mechanisms are intertwined into brittle monolithic scripts. This architectural coupling impedes regulatory adaptability when supranational standards evolve. To resolve this deficiency, this research formalizes an auditable ethical evaluation engine governed by Clean Architecture (Martin, 2017), establishing unambiguous boundaries between normative ethical invariants, orchestration use cases, and infrastructural delivery channels.
@@ -24,7 +26,7 @@ Historically, software frameworks addressing algorithmic bias and safety have su
 ---
 
 ## 2. Architectural Formalization: Clean Architecture and SOLID Principles
-<!-- EN: Formal description of architectural layers and adherence to SOLID engineering principles. | ES: Descripcion formal de las capas arquitectonicas y adhesion a los principios de ingenieria SOLID. -->
+<!-- EN: Formal description of architectural layers and adherence to SOLID engineering principles. | ES: Descripción formal de las capas arquitectónicas y adhesión a los principios de ingeniería SOLID. -->
 
 The AI Ethics Interactive Simulator is organized into concentric, decoupled rings conforming to the Dependency Inversion Principle. Dependencies point inward toward the enterprise business rules, guaranteeing that core ethical definitions remain agnostic to third-party frameworks, database drivers, or web protocols.
 
@@ -51,7 +53,7 @@ Evaluator implementations (`EUAIActEvaluator`, `IEEEStandardsEvaluator`) are str
 ---
 
 ## 3. Formalization of Ethical Frameworks in Computational Linguistics
-<!-- EN: Mathematical and ontological translation of legal and engineering standards into executable code. | ES: Traduccion matematica y ontologica de estandares legales y de ingenieria en codigo ejecutable. -->
+<!-- EN: Mathematical and ontological translation of legal and engineering standards into executable code. | ES: Traducción matemática y ontológica de estándares legales y de ingeniería en código ejecutable. -->
 
 ### 3.1 European Union Artificial Intelligence Act (Regulation EU 2024/1689)
 The EU AI Act mandates a risk-based approach to artificial intelligence systems. Our engine translates legal provisions into deterministic computational linguistics rules:
@@ -84,7 +86,7 @@ The EU AI Act mandates a risk-based approach to artificial intelligence systems.
 ---
 
 ## 4. Benchmark Scenarios in Computational Linguistics
-<!-- EN: Analysis of curated empirical failure modes seeded within the platform. | ES: Analisis de modos de fallo empiricos seleccionados inicializados dentro de la plataforma. -->
+<!-- EN: Analysis of curated empirical failure modes seeded within the platform. | ES: Análisis de modos de fallo empíricos seleccionados e inicializados dentro de la plataforma. -->
 
 The engine incorporates empirical benchmark scenarios addressing known failure modes:
 
@@ -97,7 +99,7 @@ The engine incorporates empirical benchmark scenarios addressing known failure m
 ---
 
 ## 5. Verification and Quality Engineering
-<!-- EN: Verification strategy detailing static typing, linting, and automated unit testing. | ES: Estrategia de verificacion que detalla tipado estatico, linting y pruebas unitarias automatizadas. -->
+<!-- EN: Verification strategy detailing static typing, linting, and automated unit testing. | ES: Estrategia de verificación que detalla el tipado estático, el linting y las pruebas unitarias automatizadas. -->
 To ensure operational stability and scientific reproducibility, the system enforces:
 - **Strict Static Typing**: Enforced via Mypy with zero untyped definitions (`disallow_untyped_defs = true`, `strict_equality = true`).
 - **Deterministic Linting**: Managed by Ruff targeting Python 3.11 with adherence to PEP 8, Flake8, and isort standards.
@@ -106,7 +108,7 @@ To ensure operational stability and scientific reproducibility, the system enfor
 ---
 
 ## 6. References
-<!-- EN: Academic references formatted according to APA 7th Edition guidelines. | ES: Referencias academicas formateadas segun las pautas de la 7ma edicion de APA. -->
+<!-- EN: Academic references formatted according to APA 7th Edition guidelines. | ES: Referencias académicas formateadas según las pautas de la 7.ª edición de APA. -->
 
 Bender, E. M., Gebru, T., McMillan-Major, A., & Shmitchell, S. (2021). On the dangers of stochastic parrots: Can language models be too big? *Proceedings of the 2021 ACM FAccT Conference*, 610–623. https://doi.org/10.1145/3442188.3445922
 
