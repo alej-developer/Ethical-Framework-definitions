@@ -1,9 +1,9 @@
 # Developer Guide: Clean Architecture & Modular Engineering
 
-<!-- EN: Technical developer guide detailing Clean Architecture implementation, SOLID principles, backend layers, frontend design, and extension workflows. | ES: Guia tecnica para desarrolladores que detalla la implementacion de Arquitectura Limpia, principios SOLID, capas del backend, diseno del frontend y flujos de extension. -->
+<!-- EN: Technical developer guide detailing Clean Architecture implementation, SOLID principles, backend layers, frontend design, and extension workflows. | ES: Guía técnica para desarrolladores que detalla la implementación de Arquitectura Limpia, principios SOLID, capas del backend, diseño del frontend y flujos de extensión. -->
 
 **Project**: AI Ethics Interactive Simulator  
-**Author**: Alejandro Peña (`alej-developer`) - josealepm24@gmail.com  
+**Author**: Alejandro Peña ([alej-developer](https://github.com/alej-developer))  
 **Architecture Paradigm**: Clean Architecture (Hexagonal / Ports & Adapters)  
 **Backend Stack**: Python 3.11+, FastAPI, Pydantic V2, Poetry, Mypy, Ruff, Pytest  
 **Frontend Stack**: Vanilla TypeScript, Vite, Raw CSS Variables (CSS Modules), WCAG AA  
