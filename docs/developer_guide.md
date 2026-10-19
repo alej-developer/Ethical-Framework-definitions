@@ -11,6 +11,8 @@
 
 ---
 
+> **Spanish edition / Edición en español**: [developer_guide_ES.md](./developer_guide_ES.md)
+
 ## 1. Architectural Overview
 
 The AI Ethics Interactive Simulator is engineered following the tenets of **Clean Architecture** (Martin, 2017). The core business logic and normative ethical definitions remain strictly decoupled from database drivers, web frameworks, and presentation interfaces.
@@ -121,10 +123,12 @@ The codebase enforces the five SOLID principles systematically:
 +-- docs/
 |   +-- apa_format/
 |   |   +-- architectural_decisions_whitepaper.md
+|   |   +-- architectural_decisions_whitepaper_ES.md # Spanish edition of the whitepaper
 |   +-- ethical_framework_design.md    # Primary APA 7th academic document
 |   +-- ethical_framework_design_EN.md # English APA 7th academic document
 |   +-- ethical_framework_design_ES.md # Spanish APA 7th academic document
 |   +-- developer_guide.md              # Technical Clean Architecture guide
+|   +-- developer_guide_ES.md           # Spanish edition of this guide
 +-- pyproject.toml
 ```
 
@@ -141,20 +145,20 @@ The domain layer encapsulates enterprise models without external library depende
 - **`RiskTier` (Enum)**: `UNACCEPTABLE`, `HIGH`, `SPECIFIC_TRANSPARENCY`, `MINIMAL`.
 
 ### 4.2 Application Layer (`backend/application`)
-- **`MatrixEvaluator`** ([matrix_evaluator.py](file:///backend/application/evaluators/matrix_evaluator.py)):
+- **`MatrixEvaluator`** ([matrix_evaluator.py](../backend/application/evaluators/matrix_evaluator.py)):
   - Evaluates options against the case baseline:
     $$S_d = \max(0.0, \min(1.0, B_d + M_d))$$
     $$\Delta_d = S_d - B_d$$
   - Resolves dimension weightings (defaulting to $\frac{1}{3}$ each) and calculates the overall alignment index:
     $$I_{\text{align}} = \sum w_d \cdot S_d$$
   - Formulates qualitative trade-off analyses identifying strengthened, degraded, and neutral dimensions.
-- **`CompositeEvaluator`** ([composite_evaluator.py](file:///backend/application/evaluators/composite_evaluator.py)):
+- **`CompositeEvaluator`** ([composite_evaluator.py](../backend/application/evaluators/composite_evaluator.py)):
   - Dispatches evaluation across registered framework implementations (`EUAIActEvaluator`, `IEEEStandardsEvaluator`).
-- **`EvaluateDecisionUseCase`** ([use_cases.py](file:///backend/application/use_cases.py)):
+- **`EvaluateDecisionUseCase`** ([use_cases.py](../backend/application/use_cases.py)):
   - Validates case study existence, resolves selected option, triggers `MatrixEvaluator` and `CompositeEvaluator`, persists the evaluation result, and returns a unified `DecisionImpactResponseDTO`.
 
 ### 4.3 Infrastructure Layer (`backend/infrastructure`)
-- **Dependency Injection** ([routes.py](file:///backend/infrastructure/api/routes.py)):
+- **Dependency Injection** ([routes.py](../backend/infrastructure/api/routes.py)):
   ```python
   @router.post("/decisions", response_model=DecisionImpactResponseDTO)
   async def submit_decision(
@@ -163,7 +167,7 @@ The domain layer encapsulates enterprise models without external library depende
   ) -> DecisionImpactResponseDTO:
       return use_case.execute(...)
   ```
-- **Centralized Error Handling** ([error_handler.py](file:///backend/infrastructure/middleware/error_handler.py)):
+- **Centralized Error Handling** ([error_handler.py](../backend/infrastructure/middleware/error_handler.py)):
   Standardizes API errors into consistent JSON envelopes:
   ```json
   {
@@ -238,9 +242,9 @@ The entire user interface text is dynamically swappable between English and Span
 ### 6.1 Bilingual Documentation Standard
 All comments, docstrings, and endpoint descriptions must adhere strictly to the bilingual format:
 ```python
-"""EN: [English descriptive text] | ES: [Texto descriptivo en espanol]"""
+"""EN: [English descriptive text] | ES: [Texto descriptivo en español]"""
 
-# EN: Calculate weighted overall score | ES: Calcular puntuacion general ponderada
+# EN: Calculate weighted overall score | ES: Calcular puntuación general ponderada
 ```
 
 ### 6.2 Strict Zero-Emoji Policy
@@ -269,13 +273,13 @@ EMOJI_RANGES = [
 ## 7. How-To Extension Guides
 
 ### 7.1 Adding a New Case Study
-1. In [in_memory_repository.py](file:///backend/infrastructure/repositories/in_memory_repository.py), define the new `CaseStudy` within `_seed_case_studies()`:
+1. In [in_memory_repository.py](../backend/infrastructure/repositories/in_memory_repository.py), define the new `CaseStudy` within `_seed_case_studies()`:
    - Provide `id`, `title`, `nlp_domain`, `dilemma`, `context_description`, `task_type`, and `domain_category`.
    - Specify `baseline_matrix` containing float scores for `TRANSPARENCY`, `ACCOUNTABILITY`, and `FAIRNESS`.
    - Add three `DecisionOption` objects with dimension modifiers ($\mathbf{M}$) and operational rationales.
    - Attach sample `LinguisticArtifact` instances illustrating dialectal or sociolinguistic discrepancies.
    - Define `regulatory_implications` dictionary.
-2. In [translations.ts](file:///frontend/src/i18n/translations.ts), add corresponding translations for case titles and descriptions if localized overrides are desired.
+2. In [translations.ts](../frontend/src/i18n/translations.ts), add corresponding translations for case titles and descriptions if localized overrides are desired.
 
 ### 7.2 Adding a New Ethical Framework
 1. In `backend/domain/interfaces.py`, verify compatibility with `IEthicalEvaluator`:

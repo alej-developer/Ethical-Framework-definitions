@@ -1,18 +1,18 @@
 # Marco Pedagógico y Métricas de Evaluación en Lingüística Computacional para la Simulación Interactiva de Ética en IA: Un Enfoque de Modelado de Decisiones Multidimensional
 
 **Autor**: Alejandro Peña (`alej-developer`)  
-**Contacto**: josealepm24@gmail.com  
+**Contacto**: [alej-developer](https://github.com/alej-developer)  
 **Proyecto**: Simulador Interactivo de Ética en IA  
 **Normativa de Publicación**: American Psychological Association (APA) 7.ª Edición  
-**Fecha**: Septiembre de 2026  
+**Fecha**: septiembre de 2026  
 
 ---
 
 ## Resumen
 
-<!-- EN: Structured academic abstract in Spanish delineating research problem, pedagogy, computational metrics, and simulation results. | ES: Resumen academico estructurado en espanol que delinea el problema de investigacion, pedagogia, metricas computacionales y resultados de la simulacion. -->
+<!-- EN: Structured academic abstract in Spanish delineating research problem, pedagogy, computational metrics, and simulation results. | ES: Resumen académico estructurado en español que delinea el problema de investigación, pedagogía, métricas computacionales y resultados de la simulación. -->
 
-La acelerada integración de Modelos de Lenguaje de Gran Escala (LLM) y canales automatizados de procesamiento de texto en entornos institucionales de alto impacto ha revelado deficiencias estructurales en la pedagogía convencional de la ética en Inteligencia Artificial. Las modalidades formativas tradicionales se sustentan predominantemente en teoría normativa abstracta o revisiones retrospectivas (*post-mortem*), sin cultivar competencias operativas para la toma de decisiones bajo restricciones simultáneas de ingeniería y requerimientos éticos. Este artículo presenta la arquitectura pedagógica y las métricas de lingüística computacional que fundamentan el Simulador Interactivo de Ética en IA, una plataforma educativa y de evaluación de código abierto desarrollada bajo los principios de Arquitectura Limpia y diseño SOLID. Fundamentado en el Ciclo de Aprendizaje Experiencial de Kolb y el Razonamiento Basado en Casos, el simulador sumerge al estudiante en dilemas realistas de lingüística computacional: sesgo dialectal en el análisis automatizado de contrataciones (inglés vernáculo afroamericano [AAVE] frente al inglés estadounidense estándar [SAE]), perfilado estilístico en atribución forense de autoría y brechas de procedencia en corpus de preentrenamiento. Formalizamos una Matriz Ética Multidimensional que cuantifica dinámicamente las decisiones a través de Transparencia ($S_T$), Rendición de Cuentas ($S_A$) y Equidad ($S_F$) en intervalos acotados $[0.0, 1.0]$, calculando variaciones diferenciales ($\Delta$) y alineación compuesta respecto a la Ley de Inteligencia Artificial de la Unión Europea (Reglamento UE 2024/1689) y las normas IEEE 7000-2021 e IEEE 7001-2021. Al exigir que el estudiante equilibre activamente la velocidad de procesamiento frente a la discriminación sistémica, el simulador propicia un equilibrio reflexivo, desmonta el solucionismo tecnológico ingenuo y cierra la brecha pedagógica entre la gobernanza regulatoria y la ingeniería de producción en Procesamiento del Lenguaje Natural (PLN).
+La acelerada integración de Modelos de Lenguaje de Gran Escala (LLM) y canales automatizados de procesamiento de texto en entornos institucionales de alto impacto ha revelado deficiencias estructurales en la pedagogía convencional de la ética en Inteligencia Artificial. Las modalidades formativas tradicionales se sustentan predominantemente en teoría normativa abstracta o revisiones retrospectivas (*post mortem*), sin cultivar competencias operativas para la toma de decisiones bajo restricciones simultáneas de ingeniería y requerimientos éticos. Este artículo presenta la arquitectura pedagógica y las métricas de lingüística computacional que fundamentan el Simulador Interactivo de Ética en IA, una plataforma educativa y de evaluación de código abierto desarrollada bajo los principios de Arquitectura Limpia y diseño SOLID. Fundamentado en el Ciclo de Aprendizaje Experiencial de Kolb y el Razonamiento Basado en Casos, el simulador sumerge al estudiante en dilemas realistas de lingüística computacional: sesgo dialectal en el análisis automatizado de contrataciones (inglés vernáculo afroamericano [AAVE] frente al inglés estadounidense estándar [SAE]), perfilado estilístico en atribución forense de autoría y brechas de procedencia en corpus de preentrenamiento. Formalizamos una Matriz Ética Multidimensional que cuantifica dinámicamente las decisiones a través de Transparencia ($S_T$), Rendición de Cuentas ($S_A$) y Equidad ($S_F$) en intervalos acotados $[0.0, 1.0]$, calculando variaciones diferenciales ($\Delta$) y alineación compuesta respecto a la Ley de Inteligencia Artificial de la Unión Europea (Reglamento UE 2024/1689) y las normas IEEE 7000-2021 e IEEE 7001-2021. Al exigir que el estudiante equilibre activamente la velocidad de procesamiento frente a la discriminación sistémica, el simulador propicia un equilibrio reflexivo, desmonta el solucionismo tecnológico ingenuo y cierra la brecha pedagógica entre la gobernanza regulatoria y la ingeniería de producción en Procesamiento del Lenguaje Natural (PLN).
 
 *Palabras clave*: Pedagogía de la ética en IA, lingüística computacional, aprendizaje experiencial, sesgo algorítmico, Ley de IA de la UE, IEEE 7000, Arquitectura Limpia, sistemas sociotécnicos.
 
@@ -20,7 +20,7 @@ La acelerada integración de Modelos de Lenguaje de Gran Escala (LLM) y canales 
 
 ## 1. Introducción
 
-<!-- EN: Introduction contextualizing sociotechnical vulnerabilities in NLP and the imperative for experiential ethical education. | ES: Introduccion que contextualiza las vulnerabilidades sociotecnicas en NLP y la necesidad de una educacion etica experiencial. -->
+<!-- EN: Introduction contextualizing sociotechnical vulnerabilities in NLP and the imperative for experiential ethical education. | ES: Introducción que contextualiza las vulnerabilidades sociotécnicas en NLP y la necesidad de una educación ética experiencial. -->
 
 Las tecnologías de Procesamiento del Lenguaje Natural (PLN) han trascendido la experimentación académica para desplegarse de manera ubicua en infraestructuras sociotécnicas determinantes, como la selección automatizada de personal, la evaluación de riesgo penal, el triaje clínico y los sistemas fundacionales de recuperación de información (Bender et al., 2021; Bommasani et al., 2021). No obstante, los algoritmos de aprendizaje automático entrenados con corpus textuales generados por seres humanos no se limitan a aprender dependencias semánticas: reproducen, codifican y amplifican asimetrías sociolingüísticas históricas e inequidades estructurales (Blodgett et al., 2020; Crawford, 2017). Cuando las arquitecturas computacionales procesan variedades vernáculas, dialectos no estandarizados o variables demográficas indirectas (*proxies*), los grupos históricamente discriminados experimentan perjuicios distributivos y representacionales desproporcionados (Barocas et al., 2023; Buolamwini & Gebru, 2018).
 
@@ -37,7 +37,7 @@ Para solventar este déficit, este trabajo formaliza la metodología pedagógica
 
 ## 2. Metodología Pedagógica
 
-<!-- EN: Theoretical formulation of the simulator's pedagogical architecture and learning theory alignment. | ES: Formulacion teorica de la arquitectura pedagogica del simulador y alineacion con la teoria del aprendizaje. -->
+<!-- EN: Theoretical formulation of the simulator's pedagogical architecture and learning theory alignment. | ES: Formulación teórica de la arquitectura pedagógica del simulador y alineación con la teoría del aprendizaje. -->
 
 El sustento pedagógico del Simulador Interactivo de Ética en IA articula principios de la teoría del aprendizaje en adultos, la teoría de la disonancia cognitiva y los modelos de decisión contextualizados.
 
@@ -46,23 +46,23 @@ El sustento pedagógico del Simulador Interactivo de Ética en IA articula princ
 |               Ciclo de Aprendizaje Experiencial de Kolb           |
 |                                                                   |
 |   1. Experiencia Concreta (EC)                                    |
-|      - Revisar artefactos linguisticos y matriz base empirica     |
-|      - Vivenciar tension operacional (velocidad vs. seguridad)    |
+|      - Revisar artefactos lingüísticos y matriz base empírica     |
+|      - Vivenciar tensión operacional (velocidad vs. seguridad)    |
 |                           |                                       |
 |                           v                                       |
-|   2. Observacion Reflexiva (OR)                                   |
+|   2. Observación Reflexiva (OR)                                   |
 |      - Examinar disparidades de error dialectal (AAVE vs. SAE)    |
-|      - Analizar exposicion a infraccion regulatoria               |
+|      - Analizar exposición a infracción regulatoria               |
 |                           |                                       |
 |                           v                                       |
-|   3. Conceptualizacion Abstracta (CA)                             |
-|      - Formular hipotesis sobre tensiones eticas                  |
+|   3. Conceptualización Abstracta (CA)                             |
+|      - Formular hipótesis sobre tensiones éticas                  |
 |      - Contrastar mandatos de la Ley de IA de la UE e IEEE 7000   |
 |                           |                                       |
 |                           v                                       |
-|   4. Experimentacion Activa (EA)                                  |
-|      - Seleccionar estrategia y redactar justificacion            |
-|      - Evaluar variacion de deltas multidimensionales y riesgo    |
+|   4. Experimentación Activa (EA)                                  |
+|      - Seleccionar estrategia y redactar justificación            |
+|      - Evaluar variación de deltas multidimensionales y riesgo    |
 +-------------------------------------------------------------------+
 ```
 
@@ -89,7 +89,7 @@ Al enfrentar estas tensiones inevitables, el simulador desarticula el solucionis
 
 ## 3. Métricas de Lingüística Computacional en Casos de Estudio Empíricos
 
-<!-- EN: Mathematical formalization of linguistic phenomena, bias metrics, and error rates across the three curated case studies. | ES: Formalizacion matematica de fenomenos linguisticos, metricas de sesgo y tasas de error en los tres casos de estudio. -->
+<!-- EN: Mathematical formalization of linguistic phenomena, bias metrics, and error rates across the three curated case studies. | ES: Formalización matemática de fenómenos lingüísticos, métricas de sesgo y tasas de error en los tres casos de estudio. -->
 
 El simulador incorpora tres casos de estudio complejos en PLN que modelizan vulnerabilidades críticas en sistemas productivos.
 
@@ -163,30 +163,30 @@ Los modelos base contemporáneos requieren corpus masivos de preentrenamiento qu
 
 ## 4. Mecánica de la Simulación y Matriz Ética Multidimensional
 
-<!-- EN: Theoretical and algorithmic specification of the Multidimensional Ethical Matrix, clamping bounds, and trade-off synthesis. | ES: Especificacion teorica y algoritmica de la Matriz Etica Multidimensional, limites de acotamiento y sintesis de compensaciones. -->
+<!-- EN: Theoretical and algorithmic specification of the Multidimensional Ethical Matrix, clamping bounds, and trade-off synthesis. | ES: Especificación teórica y algorítmica de la Matriz Ética Multidimensional, límites de acotamiento y síntesis de compensaciones. -->
 
 Para procesar evaluaciones reactivas en tiempo real sin recargar la interfaz, el simulador ejecuta un motor determinista basado en una Matriz Ética Multidimensional construida sobre tres pilares axiomáticos.
 
 ```
 +-------------------------------------------------------------------------+
-|                  Evaluacion Etica Multidimensional                      |
+|                  Evaluación Ética Multidimensional                      |
 |                                                                         |
-|      Transparencia (S_T)     Rendicion Cuentas (S_A)      Equidad (S_F) |
+|      Transparencia (S_T)     Rendición de Cuentas (S_A)   Equidad (S_F) |
 |      [ Base + Mod_T ]            [ Base + Mod_A ]       [ Base + Mod_F ]|
 |               |                         |                    |          |
 |               +-------------------------+--------------------+          |
 |                                         |                               |
 |                                         v                               |
 |                         Acotamiento en Intervalo [0.0, 1.0]             |
-|                         Calculo de Deltas: Delta = S - Base             |
+|                         Cálculo de Deltas: Delta = S - Base             |
 |                                         |                               |
 |                                         v                               |
-|                       Indice de Alineacion Compuesta Ponderado:         |
+|                       Índice de Alineación Compuesta Ponderado:         |
 |                       I_align = w_T*S_T + w_A*S_A + w_F*S_F             |
 |                                         |                               |
 |                                         v                               |
 |                     Mapeo Regulatorio Ley IA UE e IEEE                  |
-|                     Sintesis Narrativa de Compensaciones                |
+|                     Síntesis Narrativa de Compensaciones                |
 +-------------------------------------------------------------------------+
 ```
 
@@ -232,7 +232,7 @@ El motor clasifica el estado resultante en categorías legales vinculantes:
 
 ## 5. Mecánicas de la Simulación y Vías de Decisión Empíricas
 
-<!-- EN: Empirical breakdown of simulation runs across the three case studies, comparing status quo, heuristic, and comprehensive options. | ES: Desglose empirico de ejecuciones de simulacion en los tres casos de estudio, comparando opciones de statu quo, heuristicas y exhaustivas. -->
+<!-- EN: Empirical breakdown of simulation runs across the three case studies, comparing status quo, heuristic, and comprehensive options. | ES: Desglose empírico de ejecuciones de simulación en los tres casos de estudio, comparando opciones de statu quo, heurísticas y exhaustivas. -->
 
 La Tabla 1 detalla los parámetros cuantitativos de las simulaciones para la totalidad de casos y opciones configurados en la plataforma.
 
@@ -242,31 +242,31 @@ La Tabla 1 detalla los parámetros cuantitativos de las simulaciones para la tot
 | Caso de Estudio | Estrategia de Decisión | Dimensión | Línea Base | Modificador | Puntuación Final | Variación ($\Delta$) | Alineación Global ($I$) |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Caso 1: Contratación Automatizada** | 1. Maximización de Productividad | Transparencia ($S_T$) | 0.35 | -0.10 | 0.25 | -0.10 | **0.250** |
-| | | Rendición Cuentas ($S_A$) | 0.40 | -0.15 | 0.25 | -0.15 | |
+| | | Rendición de Cuentas ($S_A$) | 0.40 | -0.15 | 0.25 | -0.15 | |
 | | | Equidad ($S_F$) | 0.30 | -0.15 | 0.15 | -0.15 | |
 | | 2. Ofuscación Heurística | Transparencia ($S_T$) | 0.35 | +0.15 | 0.50 | +0.15 | **0.500** |
-| | | Rendición Cuentas ($S_A$) | 0.40 | +0.10 | 0.50 | +0.10 | |
+| | | Rendición de Cuentas ($S_A$) | 0.40 | +0.10 | 0.50 | +0.10 | |
 | | | Equidad ($S_F$) | 0.30 | +0.20 | 0.50 | +0.20 | |
 | | 3. Supervisión Integral Alineada | Transparencia ($S_T$) | 0.35 | +0.45 | 0.80 | +0.45 | **0.833** |
-| | | Rendición Cuentas ($S_A$) | 0.40 | +0.45 | 0.85 | +0.45 | |
+| | | Rendición de Cuentas ($S_A$) | 0.40 | +0.45 | 0.85 | +0.45 | |
 | | | Equidad ($S_F$) | 0.30 | +0.55 | 0.85 | +0.55 | |
 | **Caso 2: Estilometría Forense** | 1. Causa Probable Automatizada | Transparencia ($S_T$) | 0.25 | -0.15 | 0.10 | -0.15 | **0.083** |
-| | | Rendición Cuentas ($S_A$) | 0.30 | -0.25 | 0.05 | -0.25 | |
+| | | Rendición de Cuentas ($S_A$) | 0.30 | -0.25 | 0.05 | -0.25 | |
 | | | Equidad ($S_F$) | 0.35 | -0.25 | 0.10 | -0.25 | |
 | | 2. Peritaje Propietario Opaco | Transparencia ($S_T$) | 0.25 | +0.10 | 0.35 | +0.10 | **0.383** |
-| | | Rendición Cuentas ($S_A$) | 0.30 | +0.10 | 0.40 | +0.10 | |
+| | | Rendición de Cuentas ($S_A$) | 0.30 | +0.10 | 0.40 | +0.10 | |
 | | | Equidad ($S_F$) | 0.35 | +0.05 | 0.40 | +0.05 | |
 | | 3. Protocolo Científico Daubert | Transparencia ($S_T$) | 0.25 | +0.60 | 0.85 | +0.60 | **0.850** |
-| | | Rendición Cuentas ($S_A$) | 0.30 | +0.55 | 0.85 | +0.55 | |
+| | | Rendición de Cuentas ($S_A$) | 0.30 | +0.55 | 0.85 | +0.55 | |
 | | | Equidad ($S_F$) | 0.35 | +0.50 | 0.85 | +0.50 | |
 | **Caso 3: Procedencia de Datos** | 1. Captura Masiva No Regulada | Transparencia ($S_T$) | 0.20 | -0.10 | 0.10 | -0.10 | **0.133** |
-| | | Rendición Cuentas ($S_A$) | 0.25 | -0.15 | 0.10 | -0.15 | |
+| | | Rendición de Cuentas ($S_A$) | 0.25 | -0.15 | 0.10 | -0.15 | |
 | | | Equidad ($S_F$) | 0.35 | -0.15 | 0.20 | -0.15 | |
 | | 2. Portal Reactivo de Reclamación | Transparencia ($S_T$) | 0.20 | +0.20 | 0.40 | +0.20 | **0.433** |
-| | | Rendición Cuentas ($S_A$) | 0.25 | +0.20 | 0.45 | +0.20 | |
+| | | Rendición de Cuentas ($S_A$) | 0.25 | +0.20 | 0.45 | +0.20 | |
 | | | Equidad ($S_F$) | 0.35 | +0.10 | 0.45 | +0.10 | |
 | | 3. Auditoría de Procedencia y Consentimiento | Transparencia ($S_T$) | 0.20 | +0.65 | 0.85 | +0.65 | **0.850** |
-| | | Rendición Cuentas ($S_A$) | 0.25 | +0.60 | 0.85 | +0.60 | |
+| | | Rendición de Cuentas ($S_A$) | 0.25 | +0.60 | 0.85 | +0.60 | |
 | | | Equidad ($S_F$) | 0.35 | +0.50 | 0.85 | +0.50 | |
 
 *Nota*. Las variaciones diferenciales ($\Delta$) expresan desplazamientos respecto a la línea base del caso. La alineación global se computa con ponderaciones equiprobables ($w_T = w_A = w_F = \frac{1}{3}$). Todos los valores numéricos están estrictamente contenidos en el intervalo cerrado $[0.0, 1.0]$.
@@ -275,7 +275,7 @@ La Tabla 1 detalla los parámetros cuantitativos de las simulaciones para la tot
 
 ## 6. Discusión
 
-<!-- EN: Pedagogical implications, sociotechnical insights, limitations, and future research directions. | ES: Implicaciones pedagogicas, perspectivas sociotecnicas, limitaciones y lineas de investigacion futuras. -->
+<!-- EN: Pedagogical implications, sociotechnical insights, limitations, and future research directions. | ES: Implicaciones pedagógicas, perspectivas sociotécnicas, limitaciones y líneas de investigación futuras. -->
 
 ### 6.1 Eficacia Pedagógica y Razonamiento Moral
 La mecánica interactiva desmonta el principal espejismo de la formación en ingeniería: la presunción de que existe una solución matemática "perfecta" exenta de compromisos. Cuando los estudiantes eligen la Estrategia 3 (Supervisión Integral Alineada), constatan una notable ganancia ética ($I_{\text{align}} = 0.833$ a $0.850$). Sin embargo, al analizar las implicaciones operativas en la sesión de balance formativo—específicamente, que la supervisión humana colegiada eleva el tiempo medio de tramitación de 40 milisegundos a 14 minutos por solicitud, generando sobrecostes de decenas de miles de euros—el alumnado se enfrenta a la cruda economía de la ingeniería. Esta experiencia consolida la *imaginación moral* (Werhane, 1999), capacitando a los ingenieros nóveles para formular argumentos éticos sólidos y defendibles en ámbitos directivos y regulatorios.
@@ -295,7 +295,7 @@ Las próximas fases de desarrollo incorporarán evaluadores basados en LLM diná
 
 ## Referencias
 
-<!-- EN: Comprehensive bibliography formatted strictly according to APA 7th edition standards. | ES: Bibliografia exhaustiva formateada estrictamente bajo las normas APA 7ma edicion. -->
+<!-- EN: Comprehensive bibliography formatted strictly according to APA 7th edition standards. | ES: Bibliografía exhaustiva formateada estrictamente bajo las normas APA 7.ª edición. -->
 
 Barocas, S., Hardt, M., y Narayanan, A. (2023). *Fairness and machine learning: Limitations and opportunities*. MIT Press. https://fairmlbook.org/
 

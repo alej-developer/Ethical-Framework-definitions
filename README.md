@@ -83,7 +83,9 @@ make dev-frontend
 - Spanish Edition / Edición en español: `docs/ethical_framework_design_ES.md`
 - English Edition / Edición en inglés: `docs/ethical_framework_design_EN.md`
 - Architectural Whitepaper / Libro blanco arquitectónico: `docs/apa_format/architectural_decisions_whitepaper.md`
+- Architectural Whitepaper, Spanish edition / Libro blanco arquitectónico (edición en español): `docs/apa_format/architectural_decisions_whitepaper_ES.md`
 - Developer Guide (Clean Architecture) / Guía para desarrolladores (Arquitectura Limpia): `docs/developer_guide.md`
+- Developer Guide, Spanish edition / Guía para desarrolladores (edición en español): `docs/developer_guide_ES.md`
 
 ## Author / Autoría
 - **Alejandro Peña** ([alej-developer](https://github.com/alej-developer))
