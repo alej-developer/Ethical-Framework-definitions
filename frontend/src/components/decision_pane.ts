@@ -159,8 +159,8 @@ export class DecisionPaneComponent {
           `
               : `
             <!-- EN: Interactive Decision Tree | ES: Arbol de Decision Interactivo -->
-            <div class="section-block">
-              <span class="section-label">${getTranslation("decisionTreeHeading", lang)}</span>
+            <fieldset class="section-block decision-fieldset">
+              <legend class="section-label">${getTranslation("decisionTreeHeading", lang)}</legend>
               <div class="decision-tree-group" role="radiogroup" aria-label="${getTranslation("decisionTreeHeading", lang)}">
                 ${currentCase.decision_options
                   .map(
@@ -176,7 +176,6 @@ export class DecisionPaneComponent {
                       class="decision-radio" 
                       value="${escapeHtml(opt.id)}"
                       ${opt.id === selectedOptionId ? "checked" : ""}
-                      aria-checked="${opt.id === selectedOptionId ? "true" : "false"}"
                     />
                     <div class="option-body">
                       <span class="option-strategy-chip">${escapeHtml(opt.strategy)}</span>
@@ -198,16 +197,15 @@ export class DecisionPaneComponent {
                   )
                   .join("")}
               </div>
-            </div>
+            </fieldset>
 
             <!-- EN: Decision Rationale Form | ES: Formulario de Justificacion de la Decision -->
             <div class="section-block">
-              <span class="section-label">${getTranslation("rationaleHeading", lang)}</span>
+              <label for="input-user-rationale" class="section-label">${getTranslation("rationaleHeading", lang)}</label>
               <textarea 
                 id="input-user-rationale" 
                 class="rationale-input" 
                 placeholder="${escapeHtml(getTranslation("rationalePlaceholder", lang))}"
-                aria-label="${escapeHtml(getTranslation("rationaleHeading", lang))}"
                 aria-describedby="rationale-hint"
               >${escapeHtml(rationale)}</textarea>
               <div id="rationale-hint" class="form-hint">
@@ -271,9 +269,9 @@ export class DecisionPaneComponent {
                 </div>
 
                 <!-- EN: Overall Alignment Index | ES: Indice de Alineacion General -->
-                <div class="matrix-card" style="align-items: center; text-align: center;">
+                <div class="matrix-card matrix-card-centered">
                   <span class="matrix-dim-name">${getTranslation("overallAlignmentHeading", lang)}</span>
-                  <span class="matrix-score-val tabular-num" style="font-size: 2.2rem;">
+                  <span class="matrix-score-val matrix-score-val-lg tabular-num">
                     ${impact.matrix.overall_alignment.toFixed(3)}
                   </span>
                 </div>
@@ -284,7 +282,7 @@ export class DecisionPaneComponent {
                     <span class="verdict-sub">${getTranslation("riskTierLabel", lang)}</span>
                     <strong class="verdict-main">${this.translateRisk(impact.overall_risk_tier, lang)}</strong>
                   </div>
-                  <div class="verdict-text-group" style="text-align: right;">
+                  <div class="verdict-text-group verdict-text-group-end">
                     <span class="verdict-sub">${getTranslation("complianceStatusLabel", lang)}</span>
                     <strong class="verdict-main">${this.translateCompliance(impact.overall_compliance, lang)}</strong>
                   </div>

@@ -27,6 +27,12 @@ export class HeaderComponent {
   }
 
   private render(language: Language, isLoading = false): void {
+    document.documentElement.lang = language;
+    const skipLink = document.querySelector<HTMLAnchorElement>(".skip-link");
+    if (skipLink) {
+      skipLink.textContent = getTranslation("skipToContent", language);
+    }
+
     const title = getTranslation("appTitle", language);
     const subtitle = getTranslation("appSubtitle", language);
     const badge = getTranslation("architectureBadge", language);

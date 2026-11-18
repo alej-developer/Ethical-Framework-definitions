@@ -71,8 +71,13 @@ body {
 
 /* EN: Keyboard Focus Accessibility (WCAG AA) | ES: Accesibilidad de Foco por Teclado (WCAG AA) */
 :focus-visible {
-  outline: 2px solid var(--border-focus) !important;
-  outline-offset: 2px !important;
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+main:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 /* EN: Skip Link for Screen Readers | ES: Enlace de Salto para Lectores de Pantalla */
@@ -165,7 +170,8 @@ body {
   transition: opacity 0.15s ease;
 }
 
-.case-tab-btn:disabled {
+.case-tab-btn:disabled,
+.case-tab-btn[aria-disabled="true"] {
   opacity: 0.55;
   cursor: wait;
 }
@@ -277,11 +283,26 @@ body {
   border-bottom: 2px solid var(--border-focus);
 }
 
+.case-tab-btn:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: -2px;
+}
+
 /* EN: Left Pane: Case Study Specifications | ES: Panel Izquierdo: Especificaciones del Caso de Estudio */
 .section-block {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+}
+
+.decision-fieldset {
+  border: none;
+  min-width: 0;
+}
+
+.decision-fieldset > .section-label {
+  width: 100%;
+  margin-bottom: var(--space-sm);
 }
 
 .section-label {
@@ -409,6 +430,11 @@ body {
   gap: var(--space-2xs);
 }
 
+.matrix-card-centered {
+  align-items: center;
+  text-align: center;
+}
+
 .matrix-dim-name {
   font-family: var(--font-family-mono);
   font-size: 0.75rem;
@@ -421,6 +447,10 @@ body {
   font-weight: 700;
   font-family: var(--font-family-mono);
   color: var(--text-primary);
+}
+
+.matrix-score-val-lg {
+  font-size: 2.2rem;
 }
 
 /* EN: Regulatory Implications | ES: Implicaciones Regulatorias */
@@ -784,6 +814,10 @@ body {
   flex-direction: column;
 }
 
+.verdict-text-group-end {
+  text-align: right;
+}
+
 .verdict-sub {
   font-family: var(--font-family-mono);
   font-size: 0.7rem;
@@ -848,4 +882,16 @@ body {
   font-size: 0.82rem;
   max-width: 440px;
   margin: 0 auto;
+}
+
+/* EN: Reduced Motion Preference | ES: Preferencia de Movimiento Reducido */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

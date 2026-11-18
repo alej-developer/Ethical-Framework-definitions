@@ -7,6 +7,7 @@ import { escapeHtml } from "../utils/escape_html.ts";
 
 export class CasePaneComponent {
   private container: HTMLElement;
+  private pendingTabFocusId: string | null = null;
 
   constructor(containerId: string) {
     const el = document.getElementById(containerId);
@@ -58,7 +59,7 @@ export class CasePaneComponent {
     }
     const tabButtons = this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn");
     tabButtons.forEach((btn) => {
-      btn.disabled = isLoading;
+      btn.setAttribute("aria-disabled", isLoading ? "true" : "false");
     });
   }
 
@@ -90,6 +91,11 @@ export class CasePaneComponent {
       return;
     }
 
+    const activeTabId = cases.some((c) => c.id === selectedId) ? selectedId : cases[0].id;
+    const wasTabFocused = Boolean(
+      this.container.querySelector(".case-tabs-nav")?.contains(document.activeElement),
+    );
+
     this.container.innerHTML = `
       <div class="pane ${isLoading ? "is-loading" : ""}" role="region" aria-labelledby="left-pane-heading" aria-busy="${isLoading ? "true" : "false"}">
         <div class="pane-header">
@@ -98,26 +104,36 @@ export class CasePaneComponent {
         </div>
 
         <!-- EN: Case Studies Selector Tabs | ES: Pestanas de Seleccion de Casos de Estudio -->
-        <nav class="case-tabs-nav" aria-label="Linguistic Case Studies Selector">
+        <div class="case-tabs-nav" role="tablist" aria-labelledby="left-pane-heading">
           ${cases
-            .map(
-              (c) => `
+            .map((c) => {
+              const isSelected = c.id === activeTabId;
+              return `
             <button 
               type="button" 
+              id="case-tab-${escapeHtml(c.id)}"
               class="case-tab-btn" 
               data-id="${escapeHtml(c.id)}"
-              aria-selected="${c.id === selectedId ? "true" : "false"}"
+              aria-selected="${isSelected ? "true" : "false"}"
+              aria-controls="case-tabpanel"
+              aria-disabled="${isLoading ? "true" : "false"}"
+              tabindex="${isSelected ? "0" : "-1"}"
               role="tab"
-              ${isLoading ? "disabled" : ""}
             >
               ${escapeHtml(c.title.split(":")[0] || c.title)}
             </button>
-          `
-            )
+          `;
+            })
             .join("")}
-        </nav>
+        </div>
 
-        <div class="pane-content">
+        <div
+          id="case-tabpanel"
+          class="pane-content"
+          role="tabpanel"
+          aria-labelledby="case-tab-${escapeHtml(activeTabId)}"
+          tabindex="0"
+        >
           ${
             !currentCase
               ? `
@@ -237,15 +253,53 @@ export class CasePaneComponent {
       </div>
     `;
 
-    // EN: Attach event listeners to tab buttons | ES: Adjuntar escuchadores de eventos a botones de pestanas
-    const tabButtons = this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn");
-    tabButtons.forEach((btn) => {
+    // EN: Attach click and WAI-ARIA keyboard navigation listeners to tab buttons | ES: Adjuntar escuchadores de clic y navegacion por teclado WAI-ARIA a botones de pestanas
+    const tabButtons = Array.from(this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn"));
+
+    const activateTab = async (tabBtn: HTMLButtonElement, preserveFocus: boolean): Promise<void> => {
+      if (appStore.getState().isLoading) {
+        return;
+      }
+      const id = tabBtn.getAttribute("data-id");
+      if (id && id !== selectedId) {
+        this.pendingTabFocusId = preserveFocus ? id : null;
+        await actions.loadCaseStudy(id);
+      }
+    };
+
+    tabButtons.forEach((btn, index) => {
       btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        if (id && id !== selectedId) {
-          await actions.loadCaseStudy(id);
+        await activateTab(btn, false);
+      });
+
+      btn.addEventListener("keydown", async (event: KeyboardEvent) => {
+        if (tabButtons.length === 0) return;
+
+        let targetIndex: number | null = null;
+        if (event.key === "ArrowRight") {
+          targetIndex = (index + 1) % tabButtons.length;
+        } else if (event.key === "ArrowLeft") {
+          targetIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        } else if (event.key === "Home") {
+          targetIndex = 0;
+        } else if (event.key === "End") {
+          targetIndex = tabButtons.length - 1;
+        }
+
+        if (targetIndex !== null) {
+          event.preventDefault();
+          const targetTab = tabButtons[targetIndex];
+          targetTab.focus();
+          await activateTab(targetTab, true);
         }
       });
     });
+
+    if (this.pendingTabFocusId || wasTabFocused) {
+      const targetId = this.pendingTabFocusId ?? activeTabId;
+      this.pendingTabFocusId = null;
+      const targetTab = tabButtons.find((btn) => btn.getAttribute("data-id") === targetId);
+      targetTab?.focus();
+    }
   }
 }
