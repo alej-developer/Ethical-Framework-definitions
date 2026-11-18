@@ -17,16 +17,20 @@ export class HeaderComponent {
   }
 
   private init(): void {
-    // EN: Subscribe to state changes for dynamic language rendering | ES: Suscribirse a cambios de estado para renderizado dinamico del idioma
-    appStore.subscribe((state) => {
-      this.render(state.language);
-    });
+    // EN: Subscribe to language and loading changes for dynamic header rendering | ES: Suscribirse a cambios de idioma y carga para renderizado dinamico de cabecera
+    appStore.subscribeSelector(
+      (state) => ({ language: state.language, isLoading: state.isLoading }),
+      ({ language, isLoading }) => {
+        this.render(language, isLoading);
+      },
+    );
   }
 
-  private render(language: Language): void {
+  private render(language: Language, isLoading = false): void {
     const title = getTranslation("appTitle", language);
     const subtitle = getTranslation("appSubtitle", language);
     const badge = getTranslation("architectureBadge", language);
+    const loadingLabel = getTranslation("loadingStatusText", language);
     const toggleTarget: Language = language === "en" ? "es" : "en";
     const toggleLabel = language === "en" ? "ESPAÑOL" : "ENGLISH";
 
@@ -38,6 +42,11 @@ export class HeaderComponent {
             <p class="brand-desc">${subtitle}</p>
           </div>
           <div class="header-actions">
+            ${
+              isLoading
+                ? `<span class="loading-status-badge" role="status" aria-live="polite">${loadingLabel}</span>`
+                : ""
+            }
             <span class="system-status" aria-label="Architecture Status">${badge}</span>
             <button 
               type="button" 

@@ -54,6 +54,12 @@ export interface Translations {
   recommendationsHeading: string;
   emptyStateTitle: string;
   emptyStateDesc: string;
+  loadingCasesText: string;
+  loadingCaseSpecText: string;
+  selectCaseForDecisionsText: string;
+  charsLabel: string;
+  wasLabel: string;
+  loadingStatusText: string;
   errorTitle: string;
   retryButtonText: string;
   statusMinimalRisk: string;
@@ -119,8 +125,14 @@ export const dictionary: Record<Language, Translations> = {
     recommendationsHeading: "Statutory Remediation Directives",
     emptyStateTitle: "Simulation Pending",
     emptyStateDesc: "Select a decision alternative from the tree above and click 'Execute Ethical Evaluation' to compute real-time statutory metrics.",
+    loadingCasesText: "Loading computational linguistics cases...",
+    loadingCaseSpecText: "Loading selected case specification...",
+    selectCaseForDecisionsText: "Select a case study to display decision alternatives.",
+    charsLabel: "chars",
+    wasLabel: "was",
+    loadingStatusText: "Loading...",
     errorTitle: "Simulation Error",
-    retryButtonText: "Dismiss",
+    retryButtonText: "Retry",
     statusMinimalRisk: "Minimal Risk",
     statusSpecificTransparencyRisk: "Specific Transparency Risk",
     statusHighRisk: "High Risk (Annex III)",
@@ -182,8 +194,14 @@ export const dictionary: Record<Language, Translations> = {
     recommendationsHeading: "Directivas Estatutarias de Subsanacion",
     emptyStateTitle: "Simulacion Pendiente",
     emptyStateDesc: "Seleccione una alternativa de decision del arbol superior y haga clic en 'Ejecutar Evaluacion Etica' para calcular metricas estatutarias en tiempo real.",
+    loadingCasesText: "Cargando casos de linguistica computacional...",
+    loadingCaseSpecText: "Cargando especificacion del caso seleccionado...",
+    selectCaseForDecisionsText: "Seleccione un caso de estudio para mostrar alternativas de decision.",
+    charsLabel: "caracteres",
+    wasLabel: "antes",
+    loadingStatusText: "Cargando...",
     errorTitle: "Error de Simulacion",
-    retryButtonText: "Cerrar",
+    retryButtonText: "Reintentar",
     statusMinimalRisk: "Riesgo Minimo",
     statusSpecificTransparencyRisk: "Riesgo Especifico de Transparencia",
     statusHighRisk: "Alto Riesgo (Anexo III)",

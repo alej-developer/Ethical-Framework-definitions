@@ -163,6 +163,17 @@ export interface StandardErrorResponse {
   };
 }
 
+export type FailedOperation =
+  | { type: "LOAD_CASES" }
+  | { type: "LOAD_CASE_DETAIL"; caseId: string }
+  | {
+      type: "SUBMIT_DECISION";
+      caseId: string;
+      selectedOptionId: string;
+      userRationale: string;
+      frameworks: string[];
+    };
+
 export interface AppState {
   language: Language;
   cases: CaseStudySummary[];
@@ -175,4 +186,5 @@ export interface AppState {
   latestImpact: DecisionImpactResponse | null;
   isLoading: boolean;
   errorMessage: string | null;
+  lastFailedOperation: FailedOperation | null;
 }

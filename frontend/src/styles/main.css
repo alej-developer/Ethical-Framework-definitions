@@ -149,6 +149,27 @@ body {
   text-transform: uppercase;
 }
 
+.loading-status-badge {
+  font-family: var(--font-family-mono);
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  padding: 3px var(--space-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pane.is-loading > .pane-content {
+  opacity: 0.72;
+  transition: opacity 0.15s ease;
+}
+
+.case-tab-btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
 .btn-lang-toggle {
   background: transparent;
   color: var(--text-primary);

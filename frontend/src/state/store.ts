@@ -1,15 +1,39 @@
 /** EN: Custom reactive state manager implementing Observer pattern with atomic state subscriptions. | ES: Gestor de estado reactivo personalizado que implementa el patron Observer con suscripciones atomicas. */
 
+import { ApiService } from "../services/api.ts";
 import {
   AppState,
   CaseStudy,
   CaseStudySummary,
   DecisionImpactResponse,
+  FailedOperation,
   FrameworkInfo,
   Language,
 } from "../types/index.ts";
 
 export type Listener<T> = (state: T) => void;
+export type Selector<T, S> = (state: T) => S;
+export type EqualityFn<S> = (a: S, b: S) => boolean;
+
+export function shallowEqual<S>(a: S, b: S): boolean {
+  if (Object.is(a, b)) {
+    return true;
+  }
+  if (typeof a !== "object" || a === null || typeof b !== "object" || b === null) {
+    return false;
+  }
+  const keysA = Object.keys(a) as (keyof S)[];
+  const keysB = Object.keys(b) as (keyof S)[];
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key) || !Object.is(a[key], b[key])) {
+      return false;
+    }
+  }
+  return true;
+}
 
 export class Store<T> {
   private state: T;
@@ -28,7 +52,11 @@ export class Store<T> {
   public setState(updater: Partial<T> | ((prevState: T) => Partial<T>)): void {
     // EN: Update state and trigger subscribed observers | ES: Actualizar estado y activar observadores suscritos
     const patch = typeof updater === "function" ? updater(this.state) : updater;
-    this.state = { ...this.state, ...patch };
+    const nextState = { ...this.state, ...patch };
+    if (shallowEqual(this.state, nextState)) {
+      return;
+    }
+    this.state = nextState;
     this.notify();
   }
 
@@ -39,6 +67,28 @@ export class Store<T> {
     return () => {
       this.listeners.delete(listener);
     };
+  }
+
+  public subscribeSelector<S>(
+    selector: Selector<T, S>,
+    listener: (selected: S, prevSelected: S | undefined) => void,
+    isEqual: EqualityFn<S> = shallowEqual,
+  ): () => void {
+    // EN: Subscribe to a derived slice of state and emit only when slice changes | ES: Suscribirse a una porcion derivada del estado y emitir solo cuando cambia
+    const state = {
+      hasPrev: false,
+      currentSlice: undefined as unknown as S,
+    };
+
+    return this.subscribe((nextState) => {
+      const nextSlice = selector(nextState);
+      if (!state.hasPrev || !isEqual(state.currentSlice, nextSlice)) {
+        const prevSlice = state.hasPrev ? state.currentSlice : undefined;
+        state.currentSlice = nextSlice;
+        state.hasPrev = true;
+        listener(nextSlice, prevSlice);
+      }
+    });
   }
 
   private notify(): void {
@@ -61,6 +111,7 @@ const initialAppState: AppState = {
   latestImpact: null,
   isLoading: false,
   errorMessage: null,
+  lastFailedOperation: null,
 };
 
 // EN: Application-wide reactive store singleton | ES: Instancia unica de almacen reactivo para toda la aplicacion
@@ -77,6 +128,7 @@ export const actions = {
       cases,
       selectedCaseId: firstId,
       errorMessage: null,
+      lastFailedOperation: null,
     });
   },
 
@@ -97,6 +149,7 @@ export const actions = {
       selectedOptionId: firstOpt,
       latestImpact: null,
       errorMessage: null,
+      lastFailedOperation: null,
     });
   },
 
@@ -130,17 +183,129 @@ export const actions = {
       latestImpact: impact,
       isLoading: false,
       errorMessage: null,
+      lastFailedOperation: null,
     });
   },
 
-  setError: (errorMessage: string | null): void => {
+  setError: (errorMessage: string | null, failedOperation: FailedOperation | null = null): void => {
     appStore.setState({
       errorMessage,
       isLoading: false,
+      lastFailedOperation: failedOperation ?? appStore.getState().lastFailedOperation,
     });
   },
 
   clearError: (): void => {
-    appStore.setState({ errorMessage: null });
+    appStore.setState({ errorMessage: null, lastFailedOperation: null });
+  },
+
+  loadInitialCases: async (): Promise<void> => {
+    try {
+      actions.setLoading(true);
+      const [caseSummaries, frameworks] = await Promise.all([
+        ApiService.fetchCaseStudies(),
+        ApiService.fetchFrameworks(),
+      ]);
+      actions.setAvailableFrameworks(frameworks);
+      actions.setCaseList(caseSummaries);
+
+      if (caseSummaries.length > 0) {
+        await actions.loadCaseStudy(caseSummaries[0].id);
+      }
+    } catch (err: unknown) {
+      const errorMsg =
+        err instanceof Error
+          ? err.message
+          : "Failed to connect to AI Ethics Simulator backend.";
+      actions.setError(
+        `Connection error: ${errorMsg}. Please ensure the FastAPI backend service is running on port 8000.`,
+        { type: "LOAD_CASES" },
+      );
+    } finally {
+      actions.setLoading(false);
+    }
+  },
+
+  loadCaseStudy: async (caseId: string): Promise<void> => {
+    actions.setLoading(true);
+    try {
+      const caseData = await ApiService.fetchCaseStudy(caseId);
+      actions.setCurrentCase(caseData);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to load case study.";
+      actions.setError(msg, { type: "LOAD_CASE_DETAIL", caseId });
+    } finally {
+      actions.setLoading(false);
+    }
+  },
+
+  submitDecisionEvaluation: async (
+    caseId: string,
+    selectedOptionId: string,
+    userRationale: string,
+    frameworks: string[],
+  ): Promise<void> => {
+    actions.setLoading(true);
+    try {
+      const impact = await ApiService.submitDecision(
+        caseId,
+        selectedOptionId,
+        userRationale,
+        frameworks,
+      );
+      actions.setImpactResult(impact);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Decision evaluation failed.";
+      actions.setError(msg, {
+        type: "SUBMIT_DECISION",
+        caseId,
+        selectedOptionId,
+        userRationale,
+        frameworks,
+      });
+    } finally {
+      actions.setLoading(false);
+    }
+  },
+
+  retryLastOperation: async (): Promise<void> => {
+    const { lastFailedOperation, cases, selectedCaseId, currentCase, selectedOptionId, userRationale, selectedFrameworks } =
+      appStore.getState();
+
+    if (lastFailedOperation) {
+      if (lastFailedOperation.type === "LOAD_CASES") {
+        await actions.loadInitialCases();
+        return;
+      }
+      if (lastFailedOperation.type === "LOAD_CASE_DETAIL") {
+        await actions.loadCaseStudy(lastFailedOperation.caseId);
+        return;
+      }
+      if (lastFailedOperation.type === "SUBMIT_DECISION") {
+        await actions.submitDecisionEvaluation(
+          lastFailedOperation.caseId,
+          lastFailedOperation.selectedOptionId,
+          lastFailedOperation.userRationale,
+          lastFailedOperation.frameworks,
+        );
+        return;
+      }
+    }
+
+    // EN: Fallback inference when error was set without an explicit operation descriptor | ES: Inferencia de respaldo cuando el error se fijo sin descriptor explicito de operacion
+    if (cases.length === 0) {
+      await actions.loadInitialCases();
+    } else if (!currentCase && selectedCaseId) {
+      await actions.loadCaseStudy(selectedCaseId);
+    } else if (currentCase && selectedOptionId && userRationale.trim().length >= 10) {
+      await actions.submitDecisionEvaluation(
+        currentCase.id,
+        selectedOptionId,
+        userRationale,
+        selectedFrameworks,
+      );
+    } else {
+      actions.clearError();
+    }
   },
 };

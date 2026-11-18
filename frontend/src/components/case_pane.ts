@@ -1,9 +1,9 @@
 /** EN: Left split pane component rendering linguistic case study context, corpus artifacts, and baseline matrix. | ES: Componente del panel izquierdo que renderiza el contexto del caso linguistico, artefactos del corpus y matriz base. */
 
 import { getTranslation } from "../i18n/translations.ts";
-import { ApiService } from "../services/api.ts";
 import { actions, appStore } from "../state/store.ts";
 import { CaseStudy, CaseStudySummary, Language } from "../types/index.ts";
+import { escapeHtml } from "../utils/escape_html.ts";
 
 export class CasePaneComponent {
   private container: HTMLElement;
@@ -18,8 +18,47 @@ export class CasePaneComponent {
   }
 
   private init(): void {
-    appStore.subscribe((state) => {
-      this.render(state.cases, state.currentCase, state.selectedCaseId, state.language);
+    appStore.subscribeSelector(
+      (state) => ({
+        cases: state.cases,
+        currentCase: state.currentCase,
+        selectedCaseId: state.selectedCaseId,
+        language: state.language,
+        isLoading: state.isLoading,
+      }),
+      (slice, prevSlice) => {
+        // EN: If only isLoading changed and the pane DOM already exists, update loading attributes without rebuilding the DOM | ES: Si solo cambio isLoading y el DOM del panel ya existe, actualizar atributos de carga sin reconstruir el DOM
+        if (
+          prevSlice &&
+          prevSlice.cases === slice.cases &&
+          prevSlice.currentCase === slice.currentCase &&
+          prevSlice.selectedCaseId === slice.selectedCaseId &&
+          prevSlice.language === slice.language &&
+          prevSlice.isLoading !== slice.isLoading
+        ) {
+          this.updateLoadingState(slice.isLoading);
+          return;
+        }
+        this.render(
+          slice.cases,
+          slice.currentCase,
+          slice.selectedCaseId,
+          slice.language,
+          slice.isLoading,
+        );
+      },
+    );
+  }
+
+  private updateLoadingState(isLoading: boolean): void {
+    const pane = this.container.querySelector<HTMLElement>(".pane");
+    if (pane) {
+      pane.setAttribute("aria-busy", isLoading ? "true" : "false");
+      pane.classList.toggle("is-loading", isLoading);
+    }
+    const tabButtons = this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn");
+    tabButtons.forEach((btn) => {
+      btn.disabled = isLoading;
     });
   }
 
@@ -28,13 +67,14 @@ export class CasePaneComponent {
     currentCase: CaseStudy | null,
     selectedId: string | null,
     lang: Language,
+    isLoading = false,
   ): void {
     const sectionTitle = getTranslation("caseStudiesSectionTitle", lang);
     const sectionDesc = getTranslation("caseStudiesSectionDesc", lang);
 
     if (cases.length === 0) {
       this.container.innerHTML = `
-        <div class="pane" role="region" aria-labelledby="left-pane-heading">
+        <div class="pane ${isLoading ? "is-loading" : ""}" role="region" aria-labelledby="left-pane-heading" aria-busy="${isLoading ? "true" : "false"}">
           <div class="pane-header">
             <h2 id="left-pane-heading" class="pane-title">${sectionTitle}</h2>
             <p class="pane-subtitle">${sectionDesc}</p>
@@ -42,7 +82,7 @@ export class CasePaneComponent {
           <div class="pane-content">
             <div class="empty-state">
               <p class="empty-state-title">${getTranslation("emptyStateTitle", lang)}</p>
-              <p class="empty-state-text">Loading computational linguistics cases...</p>
+              <p class="empty-state-text">${getTranslation("loadingCasesText", lang)}</p>
             </div>
           </div>
         </div>
@@ -51,7 +91,7 @@ export class CasePaneComponent {
     }
 
     this.container.innerHTML = `
-      <div class="pane" role="region" aria-labelledby="left-pane-heading">
+      <div class="pane ${isLoading ? "is-loading" : ""}" role="region" aria-labelledby="left-pane-heading" aria-busy="${isLoading ? "true" : "false"}">
         <div class="pane-header">
           <h2 id="left-pane-heading" class="pane-title">${sectionTitle}</h2>
           <p class="pane-subtitle">${sectionDesc}</p>
@@ -65,11 +105,12 @@ export class CasePaneComponent {
             <button 
               type="button" 
               class="case-tab-btn" 
-              data-id="${c.id}"
+              data-id="${escapeHtml(c.id)}"
               aria-selected="${c.id === selectedId ? "true" : "false"}"
               role="tab"
+              ${isLoading ? "disabled" : ""}
             >
-              ${c.title.split(":")[0] || c.title}
+              ${escapeHtml(c.title.split(":")[0] || c.title)}
             </button>
           `
             )
@@ -82,17 +123,17 @@ export class CasePaneComponent {
               ? `
             <div class="empty-state">
               <p class="empty-state-title">${getTranslation("emptyStateTitle", lang)}</p>
-              <p class="empty-state-text">Loading selected case specification...</p>
+              <p class="empty-state-text">${getTranslation("loadingCaseSpecText", lang)}</p>
             </div>
           `
               : `
             <!-- EN: Case Header & Metadata | ES: Cabecera y Metadatos del Caso -->
             <div class="section-block">
-              <h3 class="case-headline">${currentCase.title}</h3>
+              <h3 class="case-headline">${escapeHtml(currentCase.title)}</h3>
               <div class="case-meta-row">
-                <span class="meta-chip">DOMAIN: ${currentCase.nlp_domain}</span>
-                <span class="meta-chip">TASK: ${currentCase.task_type}</span>
-                <span class="meta-chip">CATEGORY: ${currentCase.domain_category}</span>
+                <span class="meta-chip">DOMAIN: ${escapeHtml(currentCase.nlp_domain)}</span>
+                <span class="meta-chip">TASK: ${escapeHtml(currentCase.task_type)}</span>
+                <span class="meta-chip">CATEGORY: ${escapeHtml(currentCase.domain_category)}</span>
               </div>
             </div>
 
@@ -100,14 +141,14 @@ export class CasePaneComponent {
             <div class="section-block">
               <span class="section-label">${getTranslation("dilemmaHeading", lang)}</span>
               <div class="dilemma-callout" role="alert">
-                <p>${currentCase.dilemma}</p>
+                <p>${escapeHtml(currentCase.dilemma)}</p>
               </div>
             </div>
 
             <!-- EN: Operational Context Narrative | ES: Narrativa del Contexto Operativo -->
             <div class="section-block">
               <span class="section-label">${getTranslation("contextHeading", lang)}</span>
-              <p class="context-body">${currentCase.context_description}</p>
+              <p class="context-body">${escapeHtml(currentCase.context_description)}</p>
             </div>
 
             <!-- EN: Linguistic Artifacts Corpus Table | ES: Tabla de Artefactos del Corpus Linguistico -->
@@ -129,14 +170,14 @@ export class CasePaneComponent {
                       .map(
                         (a) => `
                       <tr class="${a.observed_output !== a.expected_output ? "disparity-row" : ""}">
-                        <td class="sample-text">"${a.text_sample}"</td>
-                        <td><span class="meta-chip">${a.dialect_or_variety}</span></td>
-                        <td>${a.expected_output}</td>
+                        <td class="sample-text">"${escapeHtml(a.text_sample)}"</td>
+                        <td><span class="meta-chip">${escapeHtml(a.dialect_or_variety)}</span></td>
+                        <td>${escapeHtml(a.expected_output)}</td>
                         <td>
                           <span class="status-badge ${
                             a.observed_output === a.expected_output ? "match" : "mismatch"
                           }">
-                            ${a.observed_output}
+                            ${escapeHtml(a.observed_output)}
                           </span>
                         </td>
                         <td class="tabular-num">${(a.confidence_score * 100).toFixed(1)}%</td>
@@ -182,8 +223,8 @@ export class CasePaneComponent {
                   .map(
                     ([framework, text]) => `
                   <div class="reg-item">
-                    <strong>${framework.replace(/_/g, " ")}</strong>
-                    <span>${text}</span>
+                    <strong>${escapeHtml(framework.replace(/_/g, " "))}</strong>
+                    <span>${escapeHtml(text)}</span>
                   </div>
                 `
                   )
@@ -202,16 +243,7 @@ export class CasePaneComponent {
       btn.addEventListener("click", async () => {
         const id = btn.getAttribute("data-id");
         if (id && id !== selectedId) {
-          actions.setLoading(true);
-          try {
-            const caseData = await ApiService.fetchCaseStudy(id);
-            actions.setCurrentCase(caseData);
-          } catch (err: unknown) {
-            const msg = err instanceof Error ? err.message : "Failed to load case study.";
-            actions.setError(msg);
-          } finally {
-            actions.setLoading(false);
-          }
+          await actions.loadCaseStudy(id);
         }
       });
     });
