@@ -104,6 +104,7 @@ const initialAppState: AppState = {
   cases: [],
   selectedCaseId: null,
   currentCase: null,
+  selectedArtifactIndex: null,
   selectedOptionId: null,
   userRationale: "",
   selectedFrameworks: ["EU_AI_ACT", "IEEE_7000_SERIES"],
@@ -146,11 +147,16 @@ export const actions = {
     appStore.setState({
       currentCase,
       selectedCaseId: currentCase.id,
+      selectedArtifactIndex: null,
       selectedOptionId: firstOpt,
       latestImpact: null,
       errorMessage: null,
       lastFailedOperation: null,
     });
+  },
+
+  selectArtifact: (artifactIndex: number | null): void => {
+    appStore.setState({ selectedArtifactIndex: artifactIndex });
   },
 
   selectOption: (optionId: string): void => {

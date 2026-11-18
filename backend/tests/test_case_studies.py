@@ -69,3 +69,23 @@ def test_dataset_provenance_case_study() -> None:
 
     option = next(o for o in case.decision_options if o.id == "opt-provenance-rigorous-governance")
     assert option.dimension_modifiers[EthicalDimension.ACCOUNTABILITY] >= 0.50
+
+
+def test_linguistic_artifact_geographic_provenance() -> None:
+    """EN: Documented dialect varieties carry broad region and source; digital/literary registers remain unpinned. | ES: Las variedades dialectales documentadas llevan region amplia y fuente; los registros digitales o literarios quedan sin ubicacion."""
+    repo = InMemoryCaseStudyRepository()
+
+    recruitment = repo.get_by_id("cs-recruitment-llm-001")
+    assert recruitment is not None
+    assert all(a.geographic_region == "US" and a.geographic_source for a in recruitment.linguistic_artifacts)
+
+    forensic = repo.get_by_id("cs-forensic-stylometry-002")
+    assert forensic is not None
+    regions = {a.dialect_or_variety: a.geographic_region for a in forensic.linguistic_artifacts}
+    assert regions["Nigerian_English_CodeSwitch"] == "NG"
+    assert regions["British_English_Standard"] == "GB"
+    assert all(a.geographic_source for a in forensic.linguistic_artifacts)
+
+    provenance = repo.get_by_id("cs-dataset-provenance-003")
+    assert provenance is not None
+    assert all(a.geographic_region is None and a.geographic_source is None for a in provenance.linguistic_artifacts)

@@ -391,6 +391,21 @@ main:focus-visible {
   background: rgba(229, 62, 62, 0.05);
 }
 
+.data-table tr.artifact-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.data-table tr.artifact-row:hover {
+  background: var(--bg-surface-hover);
+}
+
+.data-table tr.artifact-row-selected {
+  background: var(--bg-surface-active);
+  outline: 1px solid var(--border-focus);
+  outline-offset: -1px;
+}
+
 .sample-text {
   font-style: italic;
   max-width: 300px;
@@ -885,6 +900,135 @@ main:focus-visible {
   font-size: 0.82rem;
   max-width: 440px;
   margin: 0 auto;
+}
+
+/* EN: Broad-Region Linguistic Map & Graceful Fallback | ES: Mapa Linguistico de Regiones Amplias y Degradacion Elegante */
+.dialect-map-panel,
+.dialect-map-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.map-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.dialect-svg-frame {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-xs);
+}
+
+.dialect-world-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.map-continent-path {
+  fill: var(--bg-surface);
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+.map-region {
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.map-region-inactive {
+  fill: transparent;
+  stroke: transparent;
+}
+
+.map-region-interactive {
+  cursor: pointer;
+}
+
+.map-region-disparity {
+  fill: var(--accent-critical-bg);
+  stroke: var(--accent-critical);
+  stroke-width: 1.5;
+}
+
+.map-region-aligned {
+  fill: var(--accent-compliant-bg);
+  stroke: var(--accent-compliant);
+  stroke-width: 1.5;
+}
+
+.map-region-selected {
+  stroke: var(--border-focus);
+  stroke-width: 2.2;
+}
+
+.map-variety-list,
+.non-geo-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.map-variety-item {
+  width: 100%;
+  text-align: left;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 2px solid var(--border-medium);
+  padding: var(--space-xs) var(--space-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-height: 44px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.map-variety-item:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+}
+
+.map-variety-item.selected {
+  background: var(--bg-surface-active);
+  border-color: var(--border-focus);
+  border-left-color: var(--border-focus);
+}
+
+.map-variety-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.map-variety-name {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+}
+
+.map-variety-source {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.non-geo-registers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.map-sub-label {
+  font-family: var(--font-family-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
 /* EN: Tablet & Mobile Responsive Breakpoints | ES: Puntos de Ruptura Responsivos para Tableta y Movil */

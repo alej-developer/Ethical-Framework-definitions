@@ -15,6 +15,14 @@ export interface Translations {
   contextHeading: string;
   artifactsHeading: string;
   artifactsDesc: string;
+  dialectMapHeading: string;
+  dialectMapNote: string;
+  nonGeographicRegistersLabel: string;
+  mapFallbackNote: string;
+  geographicSourceLabel: string;
+  regionUSLabel: string;
+  regionNGLabel: string;
+  regionGBLabel: string;
   colSampleText: string;
   colVariety: string;
   colExpected: string;
@@ -86,6 +94,14 @@ export const dictionary: Record<Language, Translations> = {
     contextHeading: "Operational Context",
     artifactsHeading: "Linguistic Artifacts Corpus",
     artifactsDesc: "Sample tokens evaluated across dialects and demographic varieties",
+    dialectMapHeading: "Linguistic Variety Broad Regions",
+    dialectMapNote: "Broad documented regions only (no point coordinates). Non-geographic registers are not pinned.",
+    nonGeographicRegistersLabel: "Non-geographic registers (outside map)",
+    mapFallbackNote: "Geographic map unavailable; showing documented variety list.",
+    geographicSourceLabel: "Source",
+    regionUSLabel: "United States (broad region)",
+    regionNGLabel: "Nigeria (broad region)",
+    regionGBLabel: "United Kingdom (broad region)",
     colSampleText: "Sample Text",
     colVariety: "Dialect / Variety",
     colExpected: "Expected Output",
@@ -155,6 +171,14 @@ export const dictionary: Record<Language, Translations> = {
     contextHeading: "Contexto Operativo",
     artifactsHeading: "Corpus de Artefactos Linguisticos",
     artifactsDesc: "Muestras textuales evaluadas a traves de dialectos y variedades demograficas",
+    dialectMapHeading: "Regiones Amplias de Variedades Linguisticas",
+    dialectMapNote: "Solo regiones amplias documentadas (sin coordenadas puntuales). Los registros sin geografia no se ubican.",
+    nonGeographicRegistersLabel: "Registros sin geografia (fuera del mapa)",
+    mapFallbackNote: "Mapa geografico no disponible; mostrando listado documentado de variedades.",
+    geographicSourceLabel: "Fuente",
+    regionUSLabel: "Estados Unidos (region amplia)",
+    regionNGLabel: "Nigeria (region amplia)",
+    regionGBLabel: "Reino Unido (region amplia)",
     colSampleText: "Texto de Muestra",
     colVariety: "Dialecto / Variedad",
     colExpected: "Salida Esperada",

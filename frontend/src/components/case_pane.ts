@@ -2,12 +2,22 @@
 
 import { getTranslation } from "../i18n/translations.ts";
 import { actions, appStore } from "../state/store.ts";
-import { CaseStudy, CaseStudySummary, Language } from "../types/index.ts";
+import { CaseStudy, CaseStudySummary, Language, LinguisticArtifact } from "../types/index.ts";
 import { escapeHtml } from "../utils/escape_html.ts";
+
+type DialectMapRenderer = (
+  container: HTMLElement,
+  artifacts: LinguisticArtifact[],
+  selectedIndex: number | null,
+  lang: Language,
+  onSelectArtifact: (index: number) => void,
+) => void;
 
 export class CasePaneComponent {
   private container: HTMLElement;
   private pendingTabFocusId: string | null = null;
+  private mapRenderer: DialectMapRenderer | null = null;
+  private mapLoadFailed = false;
 
   constructor(containerId: string) {
     const el = document.getElementById(containerId);
@@ -24,6 +34,7 @@ export class CasePaneComponent {
         cases: state.cases,
         currentCase: state.currentCase,
         selectedCaseId: state.selectedCaseId,
+        selectedArtifactIndex: state.selectedArtifactIndex,
         language: state.language,
         isLoading: state.isLoading,
       }),
@@ -34,6 +45,7 @@ export class CasePaneComponent {
           prevSlice.cases === slice.cases &&
           prevSlice.currentCase === slice.currentCase &&
           prevSlice.selectedCaseId === slice.selectedCaseId &&
+          prevSlice.selectedArtifactIndex === slice.selectedArtifactIndex &&
           prevSlice.language === slice.language &&
           prevSlice.isLoading !== slice.isLoading
         ) {
@@ -44,6 +56,7 @@ export class CasePaneComponent {
           slice.cases,
           slice.currentCase,
           slice.selectedCaseId,
+          slice.selectedArtifactIndex,
           slice.language,
           slice.isLoading,
         );
@@ -67,6 +80,7 @@ export class CasePaneComponent {
     cases: CaseStudySummary[],
     currentCase: CaseStudy | null,
     selectedId: string | null,
+    selectedArtifactIndex: number | null,
     lang: Language,
     isLoading = false,
   ): void {
@@ -184,8 +198,13 @@ export class CasePaneComponent {
                   <tbody>
                     ${currentCase.linguistic_artifacts
                       .map(
-                        (a) => `
-                      <tr class="${a.observed_output !== a.expected_output ? "disparity-row" : ""}">
+                        (a, index) => `
+                      <tr
+                        class="artifact-row ${a.observed_output !== a.expected_output ? "disparity-row" : ""} ${index === selectedArtifactIndex ? "artifact-row-selected" : ""}"
+                        data-artifact-index="${index}"
+                        tabindex="0"
+                        aria-selected="${index === selectedArtifactIndex ? "true" : "false"}"
+                      >
                         <td class="sample-text">"${escapeHtml(a.text_sample)}"</td>
                         <td><span class="meta-chip">${escapeHtml(a.dialect_or_variety)}</span></td>
                         <td>${escapeHtml(a.expected_output)}</td>
@@ -203,6 +222,14 @@ export class CasePaneComponent {
                       .join("")}
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            <!-- EN: Geographic Broad-Region Map (Lazy-Loaded with Graceful Fallback) | ES: Mapa Geografico de Regiones Amplias (Carga Diferida con Degradacion Elegante) -->
+            <div class="section-block">
+              <span class="section-label">${getTranslation("dialectMapHeading", lang)}</span>
+              <div id="dialect-map-root" class="dialect-map-root">
+                ${this.renderMapFallbackList(currentCase.linguistic_artifacts, selectedArtifactIndex, lang, false)}
               </div>
             </div>
 
@@ -301,5 +328,91 @@ export class CasePaneComponent {
       const targetTab = tabButtons.find((btn) => btn.getAttribute("data-id") === targetId);
       targetTab?.focus();
     }
+
+    // EN: Synchronize artifact table row selection with geographic map | ES: Sincronizar seleccion de filas de tabla de artefactos con mapa geografico
+    this.container.querySelectorAll<HTMLTableRowElement>(".artifact-row").forEach((row) => {
+      const selectRow = (): void => {
+        const idx = Number(row.getAttribute("data-artifact-index"));
+        if (!Number.isNaN(idx)) {
+          actions.selectArtifact(idx === selectedArtifactIndex ? null : idx);
+        }
+      };
+      row.addEventListener("click", selectRow);
+      row.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectRow();
+        }
+      });
+    });
+
+    if (currentCase) {
+      const mapRoot = this.container.querySelector<HTMLElement>("#dialect-map-root");
+      if (mapRoot) {
+        void this.mountDialectMap(mapRoot, currentCase.linguistic_artifacts, selectedArtifactIndex, lang);
+      }
+    }
+  }
+
+  private async mountDialectMap(
+    mapRoot: HTMLElement,
+    artifacts: LinguisticArtifact[],
+    selectedArtifactIndex: number | null,
+    lang: Language,
+  ): Promise<void> {
+    if (this.mapLoadFailed) {
+      mapRoot.innerHTML = this.renderMapFallbackList(artifacts, selectedArtifactIndex, lang, true);
+      return;
+    }
+
+    if (!this.mapRenderer) {
+      try {
+        const mod = await import("./dialect_map.ts");
+        this.mapRenderer = mod.renderDialectMap;
+      } catch {
+        this.mapLoadFailed = true;
+        mapRoot.innerHTML = this.renderMapFallbackList(artifacts, selectedArtifactIndex, lang, true);
+        return;
+      }
+    }
+
+    // EN: Ensure mapRoot is still attached in the DOM after async import | ES: Asegurar que mapRoot siga montado en el DOM tras la importacion asincrona
+    if (!mapRoot.isConnected) {
+      return;
+    }
+
+    this.mapRenderer(mapRoot, artifacts, selectedArtifactIndex, lang, (idx: number) => {
+      actions.selectArtifact(idx === selectedArtifactIndex ? null : idx);
+    });
+  }
+
+  private renderMapFallbackList(
+    artifacts: LinguisticArtifact[],
+    selectedArtifactIndex: number | null,
+    lang: Language,
+    showFallbackNotice: boolean,
+  ): string {
+    return `
+      <div class="dialect-map-fallback">
+        ${showFallbackNotice ? `<p class="map-note">${getTranslation("mapFallbackNote", lang)}</p>` : ""}
+        <div class="map-variety-list">
+          ${artifacts
+            .map((a, idx) => {
+              const isSelected = idx === selectedArtifactIndex;
+              return `
+                <div class="reg-item ${isSelected ? "selected" : ""}">
+                  <strong>${escapeHtml(a.dialect_or_variety)}</strong>
+                  <span>${
+                    a.geographic_region
+                      ? `${escapeHtml(a.geographic_region)} &middot; ${escapeHtml(a.geographic_source ?? "")}`
+                      : escapeHtml(getTranslation("nonGeographicRegistersLabel", lang))
+                  }</span>
+                </div>
+              `;
+            })
+            .join("")}
+        </div>
+      </div>
+    `;
   }
 }

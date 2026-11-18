@@ -41,6 +41,8 @@ export interface LinguisticArtifact {
   expected_output: string;
   observed_output: string;
   confidence_score: number;
+  geographic_region?: string | null;
+  geographic_source?: string | null;
 }
 
 export interface DecisionOption {
@@ -179,6 +181,7 @@ export interface AppState {
   cases: CaseStudySummary[];
   selectedCaseId: string | null;
   currentCase: CaseStudy | null;
+  selectedArtifactIndex: number | null;
   selectedOptionId: string | null;
   userRationale: string;
   selectedFrameworks: string[];
