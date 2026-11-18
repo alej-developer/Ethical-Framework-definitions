@@ -203,16 +203,9 @@ main:focus-visible {
 
 .split-layout {
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   gap: var(--space-xl);
   align-items: start;
-}
-
-@media (max-width: 1100px) {
-  .split-layout {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
-  }
 }
 
 /* EN: Pane Containers & Visual Structure | ES: Contenedores de Paneles y Estructura Visual */
@@ -221,6 +214,7 @@ main:focus-visible {
   border: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .pane-header {
@@ -256,6 +250,8 @@ main:focus-visible {
   border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-canvas);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
 }
 
 .case-tab-btn {
@@ -264,11 +260,15 @@ main:focus-visible {
   border: none;
   border-right: 1px solid var(--border-subtle);
   padding: var(--space-md) var(--space-lg);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   font-size: 0.85rem;
   font-weight: 600;
   text-align: left;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
@@ -355,7 +355,10 @@ main:focus-visible {
 
 /* EN: Linguistic Artifacts Table | ES: Tabla de Artefactos Linguisticos */
 .table-wrapper {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border-subtle);
 }
 
@@ -882,6 +885,122 @@ main:focus-visible {
   font-size: 0.82rem;
   max-width: 440px;
   margin: 0 auto;
+}
+
+/* EN: Tablet & Mobile Responsive Breakpoints | ES: Puntos de Ruptura Responsivos para Tableta y Movil */
+@media (max-width: 900px) {
+  .app-header {
+    height: auto;
+    min-height: var(--header-height);
+    padding: var(--space-sm) 0;
+  }
+
+  .header-container {
+    padding: 0 var(--space-md);
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .main-wrapper {
+    padding: var(--space-md);
+  }
+
+  .split-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .pane-header,
+  .pane-content {
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 640px) {
+  .header-container {
+    padding: 0 var(--space-sm);
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .btn-lang-toggle {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .main-wrapper {
+    padding: var(--space-sm);
+  }
+
+  .pane-header,
+  .pane-content {
+    padding: var(--space-sm);
+  }
+
+  .pane-content {
+    gap: var(--space-lg);
+  }
+
+  .case-tab-btn {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.8rem;
+  }
+
+  .case-headline {
+    font-size: 1.1rem;
+  }
+
+  .sample-text {
+    min-width: 180px;
+  }
+
+  .matrix-grid,
+  .impact-matrix-display {
+    grid-template-columns: 1fr;
+  }
+
+  .matrix-score-val,
+  .impact-score-current {
+    font-size: 1.35rem;
+  }
+
+  .matrix-score-val-lg {
+    font-size: 1.8rem;
+  }
+
+  .verdict-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .verdict-text-group-end {
+    text-align: left;
+  }
+
+  .alert-error {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .form-hint {
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .dilemma-callout,
+  .context-body,
+  .tradeoff-box,
+  .recs-list,
+  .alert-error {
+    overflow-wrap: anywhere;
+  }
 }
 
 /* EN: Reduced Motion Preference | ES: Preferencia de Movimiento Reducido */
