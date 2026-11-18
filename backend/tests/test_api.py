@@ -44,6 +44,7 @@ def test_frameworks_endpoint_matches_evaluator_metadata() -> None:
     for evaluator in build_default_evaluators():
         assessment = evaluator.evaluate(scenario)
         entry = catalogue[evaluator.framework.value]
+        assert assessment.region is not None
         assert entry["region"] == assessment.region.value
         assert entry["binding_level"] == assessment.binding_level.value
 

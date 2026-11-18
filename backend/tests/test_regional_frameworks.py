@@ -68,7 +68,12 @@ def _prohibited_scenario() -> Scenario:
 
 
 @pytest.mark.parametrize(("evaluator_cls", "framework", "region", "binding"), REGIONAL_CASES)
-def test_regional_evaluator_metadata_contract(evaluator_cls, framework, region, binding) -> None:
+def test_regional_evaluator_metadata_contract(
+    evaluator_cls: type[IEthicalEvaluator],
+    framework: FrameworkType,
+    region: FrameworkRegion,
+    binding: BindingLevel,
+) -> None:
     """EN: Each evaluator reports its framework, region and binding level. | ES: Cada evaluador informa su marco, region y nivel de vinculacion."""
     evaluator = evaluator_cls()
     assessment = evaluator.evaluate(_biased_triage_scenario())
@@ -83,7 +88,12 @@ def test_regional_evaluator_metadata_contract(evaluator_cls, framework, region, 
 
 
 @pytest.mark.parametrize(("evaluator_cls", "framework", "region", "binding"), REGIONAL_CASES)
-def test_alignment_status_only_for_non_binding_frameworks(evaluator_cls, framework, region, binding) -> None:
+def test_alignment_status_only_for_non_binding_frameworks(
+    evaluator_cls: type[IEthicalEvaluator],
+    framework: FrameworkType,
+    region: FrameworkRegion,
+    binding: BindingLevel,
+) -> None:
     """EN: Alignment verdict is set only for soft-law or proposed frameworks. | ES: El veredicto de alineacion solo se fija en marcos de soft-law o propuestos."""
     assessment = evaluator_cls().evaluate(_biased_triage_scenario())
 
@@ -94,7 +104,9 @@ def test_alignment_status_only_for_non_binding_frameworks(evaluator_cls, framewo
 
 
 @pytest.mark.parametrize("evaluator_cls", [BrazilPL2338Evaluator, ChinaAIRegulationsEvaluator])
-def test_prohibited_domain_yields_unacceptable_risk(evaluator_cls) -> None:
+def test_prohibited_domain_yields_unacceptable_risk(
+    evaluator_cls: type[IEthicalEvaluator],
+) -> None:
     """EN: Frameworks with explicit prohibitions flag social scoring. | ES: Los marcos con prohibiciones explicitas marcan la puntuacion social."""
     assessment = evaluator_cls().evaluate(_prohibited_scenario())
 
