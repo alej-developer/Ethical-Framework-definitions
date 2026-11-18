@@ -141,8 +141,6 @@ class ListScenariosUseCase:
                 expected_output=a.expected_output,
                 observed_output=a.observed_output,
                 confidence_score=a.confidence_score,
-                geographic_region=a.geographic_region,
-                geographic_source=a.geographic_source,
             )
             for a in scenario.artifacts
         ]
@@ -178,8 +176,6 @@ class GetScenarioUseCase:
                 expected_output=a.expected_output,
                 observed_output=a.observed_output,
                 confidence_score=a.confidence_score,
-                geographic_region=a.geographic_region,
-                geographic_source=a.geographic_source,
             )
             for a in scenario.artifacts
         ]
@@ -244,8 +240,6 @@ class GetCaseStudyUseCase:
                 expected_output=a.expected_output,
                 observed_output=a.observed_output,
                 confidence_score=a.confidence_score,
-                geographic_region=a.geographic_region,
-                geographic_source=a.geographic_source,
             )
             for a in case_study.linguistic_artifacts
         ]

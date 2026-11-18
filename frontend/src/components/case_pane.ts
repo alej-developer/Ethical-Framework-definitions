@@ -1,23 +1,12 @@
 /** EN: Left split pane component rendering linguistic case study context, corpus artifacts, and baseline matrix. | ES: Componente del panel izquierdo que renderiza el contexto del caso linguistico, artefactos del corpus y matriz base. */
 
 import { getTranslation } from "../i18n/translations.ts";
+import { ApiService } from "../services/api.ts";
 import { actions, appStore } from "../state/store.ts";
-import { CaseStudy, CaseStudySummary, Language, LinguisticArtifact } from "../types/index.ts";
-import { escapeHtml } from "../utils/escape_html.ts";
-
-type DialectMapRenderer = (
-  container: HTMLElement,
-  artifacts: LinguisticArtifact[],
-  selectedIndex: number | null,
-  lang: Language,
-  onSelectArtifact: (index: number) => void,
-) => void;
+import { CaseStudy, CaseStudySummary, Language } from "../types/index.ts";
 
 export class CasePaneComponent {
   private container: HTMLElement;
-  private pendingTabFocusId: string | null = null;
-  private mapRenderer: DialectMapRenderer | null = null;
-  private mapLoadFailed = false;
 
   constructor(containerId: string) {
     const el = document.getElementById(containerId);
@@ -29,50 +18,8 @@ export class CasePaneComponent {
   }
 
   private init(): void {
-    appStore.subscribeSelector(
-      (state) => ({
-        cases: state.cases,
-        currentCase: state.currentCase,
-        selectedCaseId: state.selectedCaseId,
-        selectedArtifactIndex: state.selectedArtifactIndex,
-        language: state.language,
-        isLoading: state.isLoading,
-      }),
-      (slice, prevSlice) => {
-        // EN: If only isLoading changed and the pane DOM already exists, update loading attributes without rebuilding the DOM | ES: Si solo cambio isLoading y el DOM del panel ya existe, actualizar atributos de carga sin reconstruir el DOM
-        if (
-          prevSlice &&
-          prevSlice.cases === slice.cases &&
-          prevSlice.currentCase === slice.currentCase &&
-          prevSlice.selectedCaseId === slice.selectedCaseId &&
-          prevSlice.selectedArtifactIndex === slice.selectedArtifactIndex &&
-          prevSlice.language === slice.language &&
-          prevSlice.isLoading !== slice.isLoading
-        ) {
-          this.updateLoadingState(slice.isLoading);
-          return;
-        }
-        this.render(
-          slice.cases,
-          slice.currentCase,
-          slice.selectedCaseId,
-          slice.selectedArtifactIndex,
-          slice.language,
-          slice.isLoading,
-        );
-      },
-    );
-  }
-
-  private updateLoadingState(isLoading: boolean): void {
-    const pane = this.container.querySelector<HTMLElement>(".pane");
-    if (pane) {
-      pane.setAttribute("aria-busy", isLoading ? "true" : "false");
-      pane.classList.toggle("is-loading", isLoading);
-    }
-    const tabButtons = this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn");
-    tabButtons.forEach((btn) => {
-      btn.setAttribute("aria-disabled", isLoading ? "true" : "false");
+    appStore.subscribe((state) => {
+      this.render(state.cases, state.currentCase, state.selectedCaseId, state.language);
     });
   }
 
@@ -80,16 +27,14 @@ export class CasePaneComponent {
     cases: CaseStudySummary[],
     currentCase: CaseStudy | null,
     selectedId: string | null,
-    selectedArtifactIndex: number | null,
     lang: Language,
-    isLoading = false,
   ): void {
     const sectionTitle = getTranslation("caseStudiesSectionTitle", lang);
     const sectionDesc = getTranslation("caseStudiesSectionDesc", lang);
 
     if (cases.length === 0) {
       this.container.innerHTML = `
-        <div class="pane ${isLoading ? "is-loading" : ""}" role="region" aria-labelledby="left-pane-heading" aria-busy="${isLoading ? "true" : "false"}">
+        <div class="pane" role="region" aria-labelledby="left-pane-heading">
           <div class="pane-header">
             <h2 id="left-pane-heading" class="pane-title">${sectionTitle}</h2>
             <p class="pane-subtitle">${sectionDesc}</p>
@@ -97,7 +42,7 @@ export class CasePaneComponent {
           <div class="pane-content">
             <div class="empty-state">
               <p class="empty-state-title">${getTranslation("emptyStateTitle", lang)}</p>
-              <p class="empty-state-text">${getTranslation("loadingCasesText", lang)}</p>
+              <p class="empty-state-text">Loading computational linguistics cases...</p>
             </div>
           </div>
         </div>
@@ -105,65 +50,49 @@ export class CasePaneComponent {
       return;
     }
 
-    const activeTabId = cases.some((c) => c.id === selectedId) ? selectedId : cases[0].id;
-    const wasTabFocused = Boolean(
-      this.container.querySelector(".case-tabs-nav")?.contains(document.activeElement),
-    );
-
     this.container.innerHTML = `
-      <div class="pane ${isLoading ? "is-loading" : ""}" role="region" aria-labelledby="left-pane-heading" aria-busy="${isLoading ? "true" : "false"}">
+      <div class="pane" role="region" aria-labelledby="left-pane-heading">
         <div class="pane-header">
           <h2 id="left-pane-heading" class="pane-title">${sectionTitle}</h2>
           <p class="pane-subtitle">${sectionDesc}</p>
         </div>
 
         <!-- EN: Case Studies Selector Tabs | ES: Pestanas de Seleccion de Casos de Estudio -->
-        <div class="case-tabs-nav" role="tablist" aria-labelledby="left-pane-heading">
+        <nav class="case-tabs-nav" aria-label="Linguistic Case Studies Selector">
           ${cases
-            .map((c) => {
-              const isSelected = c.id === activeTabId;
-              return `
+            .map(
+              (c) => `
             <button 
               type="button" 
-              id="case-tab-${escapeHtml(c.id)}"
               class="case-tab-btn" 
-              data-id="${escapeHtml(c.id)}"
-              aria-selected="${isSelected ? "true" : "false"}"
-              aria-controls="case-tabpanel"
-              aria-disabled="${isLoading ? "true" : "false"}"
-              tabindex="${isSelected ? "0" : "-1"}"
+              data-id="${c.id}"
+              aria-selected="${c.id === selectedId ? "true" : "false"}"
               role="tab"
             >
-              ${escapeHtml(c.title.split(":")[0] || c.title)}
+              ${c.title.split(":")[0] || c.title}
             </button>
-          `;
-            })
+          `
+            )
             .join("")}
-        </div>
+        </nav>
 
-        <div
-          id="case-tabpanel"
-          class="pane-content"
-          role="tabpanel"
-          aria-labelledby="case-tab-${escapeHtml(activeTabId)}"
-          tabindex="0"
-        >
+        <div class="pane-content">
           ${
             !currentCase
               ? `
             <div class="empty-state">
               <p class="empty-state-title">${getTranslation("emptyStateTitle", lang)}</p>
-              <p class="empty-state-text">${getTranslation("loadingCaseSpecText", lang)}</p>
+              <p class="empty-state-text">Loading selected case specification...</p>
             </div>
           `
               : `
             <!-- EN: Case Header & Metadata | ES: Cabecera y Metadatos del Caso -->
             <div class="section-block">
-              <h3 class="case-headline">${escapeHtml(currentCase.title)}</h3>
+              <h3 class="case-headline">${currentCase.title}</h3>
               <div class="case-meta-row">
-                <span class="meta-chip">DOMAIN: ${escapeHtml(currentCase.nlp_domain)}</span>
-                <span class="meta-chip">TASK: ${escapeHtml(currentCase.task_type)}</span>
-                <span class="meta-chip">CATEGORY: ${escapeHtml(currentCase.domain_category)}</span>
+                <span class="meta-chip">DOMAIN: ${currentCase.nlp_domain}</span>
+                <span class="meta-chip">TASK: ${currentCase.task_type}</span>
+                <span class="meta-chip">CATEGORY: ${currentCase.domain_category}</span>
               </div>
             </div>
 
@@ -171,14 +100,14 @@ export class CasePaneComponent {
             <div class="section-block">
               <span class="section-label">${getTranslation("dilemmaHeading", lang)}</span>
               <div class="dilemma-callout" role="alert">
-                <p>${escapeHtml(currentCase.dilemma)}</p>
+                <p>${currentCase.dilemma}</p>
               </div>
             </div>
 
             <!-- EN: Operational Context Narrative | ES: Narrativa del Contexto Operativo -->
             <div class="section-block">
               <span class="section-label">${getTranslation("contextHeading", lang)}</span>
-              <p class="context-body">${escapeHtml(currentCase.context_description)}</p>
+              <p class="context-body">${currentCase.context_description}</p>
             </div>
 
             <!-- EN: Linguistic Artifacts Corpus Table | ES: Tabla de Artefactos del Corpus Linguistico -->
@@ -198,21 +127,16 @@ export class CasePaneComponent {
                   <tbody>
                     ${currentCase.linguistic_artifacts
                       .map(
-                        (a, index) => `
-                      <tr
-                        class="artifact-row ${a.observed_output !== a.expected_output ? "disparity-row" : ""} ${index === selectedArtifactIndex ? "artifact-row-selected" : ""}"
-                        data-artifact-index="${index}"
-                        tabindex="0"
-                        aria-selected="${index === selectedArtifactIndex ? "true" : "false"}"
-                      >
-                        <td class="sample-text">"${escapeHtml(a.text_sample)}"</td>
-                        <td><span class="meta-chip">${escapeHtml(a.dialect_or_variety)}</span></td>
-                        <td>${escapeHtml(a.expected_output)}</td>
+                        (a) => `
+                      <tr class="${a.observed_output !== a.expected_output ? "disparity-row" : ""}">
+                        <td class="sample-text">"${a.text_sample}"</td>
+                        <td><span class="meta-chip">${a.dialect_or_variety}</span></td>
+                        <td>${a.expected_output}</td>
                         <td>
                           <span class="status-badge ${
                             a.observed_output === a.expected_output ? "match" : "mismatch"
                           }">
-                            ${escapeHtml(a.observed_output)}
+                            ${a.observed_output}
                           </span>
                         </td>
                         <td class="tabular-num">${(a.confidence_score * 100).toFixed(1)}%</td>
@@ -222,14 +146,6 @@ export class CasePaneComponent {
                       .join("")}
                   </tbody>
                 </table>
-              </div>
-            </div>
-
-            <!-- EN: Geographic Broad-Region Map (Lazy-Loaded with Graceful Fallback) | ES: Mapa Geografico de Regiones Amplias (Carga Diferida con Degradacion Elegante) -->
-            <div class="section-block">
-              <span class="section-label">${getTranslation("dialectMapHeading", lang)}</span>
-              <div id="dialect-map-root" class="dialect-map-root">
-                ${this.renderMapFallbackList(currentCase.linguistic_artifacts, selectedArtifactIndex, lang, false)}
               </div>
             </div>
 
@@ -266,8 +182,8 @@ export class CasePaneComponent {
                   .map(
                     ([framework, text]) => `
                   <div class="reg-item">
-                    <strong>${escapeHtml(framework.replace(/_/g, " "))}</strong>
-                    <span>${escapeHtml(text)}</span>
+                    <strong>${framework.replace(/_/g, " ")}</strong>
+                    <span>${text}</span>
                   </div>
                 `
                   )
@@ -280,139 +196,24 @@ export class CasePaneComponent {
       </div>
     `;
 
-    // EN: Attach click and WAI-ARIA keyboard navigation listeners to tab buttons | ES: Adjuntar escuchadores de clic y navegacion por teclado WAI-ARIA a botones de pestanas
-    const tabButtons = Array.from(this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn"));
-
-    const activateTab = async (tabBtn: HTMLButtonElement, preserveFocus: boolean): Promise<void> => {
-      if (appStore.getState().isLoading) {
-        return;
-      }
-      const id = tabBtn.getAttribute("data-id");
-      if (id && id !== selectedId) {
-        this.pendingTabFocusId = preserveFocus ? id : null;
-        await actions.loadCaseStudy(id);
-      }
-    };
-
-    tabButtons.forEach((btn, index) => {
+    // EN: Attach event listeners to tab buttons | ES: Adjuntar escuchadores de eventos a botones de pestanas
+    const tabButtons = this.container.querySelectorAll<HTMLButtonElement>(".case-tab-btn");
+    tabButtons.forEach((btn) => {
       btn.addEventListener("click", async () => {
-        await activateTab(btn, false);
-      });
-
-      btn.addEventListener("keydown", async (event: KeyboardEvent) => {
-        if (tabButtons.length === 0) return;
-
-        let targetIndex: number | null = null;
-        if (event.key === "ArrowRight") {
-          targetIndex = (index + 1) % tabButtons.length;
-        } else if (event.key === "ArrowLeft") {
-          targetIndex = (index - 1 + tabButtons.length) % tabButtons.length;
-        } else if (event.key === "Home") {
-          targetIndex = 0;
-        } else if (event.key === "End") {
-          targetIndex = tabButtons.length - 1;
-        }
-
-        if (targetIndex !== null) {
-          event.preventDefault();
-          const targetTab = tabButtons[targetIndex];
-          targetTab.focus();
-          await activateTab(targetTab, true);
+        const id = btn.getAttribute("data-id");
+        if (id && id !== selectedId) {
+          actions.setLoading(true);
+          try {
+            const caseData = await ApiService.fetchCaseStudy(id);
+            actions.setCurrentCase(caseData);
+          } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : "Failed to load case study.";
+            actions.setError(msg);
+          } finally {
+            actions.setLoading(false);
+          }
         }
       });
     });
-
-    if (this.pendingTabFocusId || wasTabFocused) {
-      const targetId = this.pendingTabFocusId ?? activeTabId;
-      this.pendingTabFocusId = null;
-      const targetTab = tabButtons.find((btn) => btn.getAttribute("data-id") === targetId);
-      targetTab?.focus();
-    }
-
-    // EN: Synchronize artifact table row selection with geographic map | ES: Sincronizar seleccion de filas de tabla de artefactos con mapa geografico
-    this.container.querySelectorAll<HTMLTableRowElement>(".artifact-row").forEach((row) => {
-      const selectRow = (): void => {
-        const idx = Number(row.getAttribute("data-artifact-index"));
-        if (!Number.isNaN(idx)) {
-          actions.selectArtifact(idx === selectedArtifactIndex ? null : idx);
-        }
-      };
-      row.addEventListener("click", selectRow);
-      row.addEventListener("keydown", (event: KeyboardEvent) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          selectRow();
-        }
-      });
-    });
-
-    if (currentCase) {
-      const mapRoot = this.container.querySelector<HTMLElement>("#dialect-map-root");
-      if (mapRoot) {
-        void this.mountDialectMap(mapRoot, currentCase.linguistic_artifacts, selectedArtifactIndex, lang);
-      }
-    }
-  }
-
-  private async mountDialectMap(
-    mapRoot: HTMLElement,
-    artifacts: LinguisticArtifact[],
-    selectedArtifactIndex: number | null,
-    lang: Language,
-  ): Promise<void> {
-    if (this.mapLoadFailed) {
-      mapRoot.innerHTML = this.renderMapFallbackList(artifacts, selectedArtifactIndex, lang, true);
-      return;
-    }
-
-    if (!this.mapRenderer) {
-      try {
-        const mod = await import("./dialect_map.ts");
-        this.mapRenderer = mod.renderDialectMap;
-      } catch {
-        this.mapLoadFailed = true;
-        mapRoot.innerHTML = this.renderMapFallbackList(artifacts, selectedArtifactIndex, lang, true);
-        return;
-      }
-    }
-
-    // EN: Ensure mapRoot is still attached in the DOM after async import | ES: Asegurar que mapRoot siga montado en el DOM tras la importacion asincrona
-    if (!mapRoot.isConnected) {
-      return;
-    }
-
-    this.mapRenderer(mapRoot, artifacts, selectedArtifactIndex, lang, (idx: number) => {
-      actions.selectArtifact(idx === selectedArtifactIndex ? null : idx);
-    });
-  }
-
-  private renderMapFallbackList(
-    artifacts: LinguisticArtifact[],
-    selectedArtifactIndex: number | null,
-    lang: Language,
-    showFallbackNotice: boolean,
-  ): string {
-    return `
-      <div class="dialect-map-fallback">
-        ${showFallbackNotice ? `<p class="map-note">${getTranslation("mapFallbackNote", lang)}</p>` : ""}
-        <div class="map-variety-list">
-          ${artifacts
-            .map((a, idx) => {
-              const isSelected = idx === selectedArtifactIndex;
-              return `
-                <div class="reg-item ${isSelected ? "selected" : ""}">
-                  <strong>${escapeHtml(a.dialect_or_variety)}</strong>
-                  <span>${
-                    a.geographic_region
-                      ? `${escapeHtml(a.geographic_region)} &middot; ${escapeHtml(a.geographic_source ?? "")}`
-                      : escapeHtml(getTranslation("nonGeographicRegistersLabel", lang))
-                  }</span>
-                </div>
-              `;
-            })
-            .join("")}
-        </div>
-      </div>
-    `;
   }
 }

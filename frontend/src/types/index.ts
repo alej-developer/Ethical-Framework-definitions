@@ -41,8 +41,6 @@ export interface LinguisticArtifact {
   expected_output: string;
   observed_output: string;
   confidence_score: number;
-  geographic_region?: string | null;
-  geographic_source?: string | null;
 }
 
 export interface DecisionOption {
@@ -165,23 +163,11 @@ export interface StandardErrorResponse {
   };
 }
 
-export type FailedOperation =
-  | { type: "LOAD_CASES" }
-  | { type: "LOAD_CASE_DETAIL"; caseId: string }
-  | {
-      type: "SUBMIT_DECISION";
-      caseId: string;
-      selectedOptionId: string;
-      userRationale: string;
-      frameworks: string[];
-    };
-
 export interface AppState {
   language: Language;
   cases: CaseStudySummary[];
   selectedCaseId: string | null;
   currentCase: CaseStudy | null;
-  selectedArtifactIndex: number | null;
   selectedOptionId: string | null;
   userRationale: string;
   selectedFrameworks: string[];
@@ -189,5 +175,4 @@ export interface AppState {
   latestImpact: DecisionImpactResponse | null;
   isLoading: boolean;
   errorMessage: string | null;
-  lastFailedOperation: FailedOperation | null;
 }

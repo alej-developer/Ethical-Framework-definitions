@@ -78,8 +78,6 @@ class LinguisticArtifactDTO(BaseModel):
     expected_output: str
     observed_output: str
     confidence_score: float
-    geographic_region: str | None = None
-    geographic_source: str | None = None
 
 
 class ScenarioDTO(BaseModel):

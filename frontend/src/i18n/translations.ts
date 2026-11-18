@@ -15,14 +15,6 @@ export interface Translations {
   contextHeading: string;
   artifactsHeading: string;
   artifactsDesc: string;
-  dialectMapHeading: string;
-  dialectMapNote: string;
-  nonGeographicRegistersLabel: string;
-  mapFallbackNote: string;
-  geographicSourceLabel: string;
-  regionUSLabel: string;
-  regionNGLabel: string;
-  regionGBLabel: string;
   colSampleText: string;
   colVariety: string;
   colExpected: string;
@@ -62,12 +54,6 @@ export interface Translations {
   recommendationsHeading: string;
   emptyStateTitle: string;
   emptyStateDesc: string;
-  loadingCasesText: string;
-  loadingCaseSpecText: string;
-  selectCaseForDecisionsText: string;
-  charsLabel: string;
-  wasLabel: string;
-  loadingStatusText: string;
   errorTitle: string;
   retryButtonText: string;
   statusMinimalRisk: string;
@@ -94,14 +80,6 @@ export const dictionary: Record<Language, Translations> = {
     contextHeading: "Operational Context",
     artifactsHeading: "Linguistic Artifacts Corpus",
     artifactsDesc: "Sample tokens evaluated across dialects and demographic varieties",
-    dialectMapHeading: "Linguistic Variety Broad Regions",
-    dialectMapNote: "Broad documented regions only (no point coordinates). Non-geographic registers are not pinned.",
-    nonGeographicRegistersLabel: "Non-geographic registers (outside map)",
-    mapFallbackNote: "Geographic map unavailable; showing documented variety list.",
-    geographicSourceLabel: "Source",
-    regionUSLabel: "United States (broad region)",
-    regionNGLabel: "Nigeria (broad region)",
-    regionGBLabel: "United Kingdom (broad region)",
     colSampleText: "Sample Text",
     colVariety: "Dialect / Variety",
     colExpected: "Expected Output",
@@ -141,14 +119,8 @@ export const dictionary: Record<Language, Translations> = {
     recommendationsHeading: "Statutory Remediation Directives",
     emptyStateTitle: "Simulation Pending",
     emptyStateDesc: "Select a decision alternative from the tree above and click 'Execute Ethical Evaluation' to compute real-time statutory metrics.",
-    loadingCasesText: "Loading computational linguistics cases...",
-    loadingCaseSpecText: "Loading selected case specification...",
-    selectCaseForDecisionsText: "Select a case study to display decision alternatives.",
-    charsLabel: "chars",
-    wasLabel: "was",
-    loadingStatusText: "Loading...",
     errorTitle: "Simulation Error",
-    retryButtonText: "Retry",
+    retryButtonText: "Dismiss",
     statusMinimalRisk: "Minimal Risk",
     statusSpecificTransparencyRisk: "Specific Transparency Risk",
     statusHighRisk: "High Risk (Annex III)",
@@ -171,14 +143,6 @@ export const dictionary: Record<Language, Translations> = {
     contextHeading: "Contexto Operativo",
     artifactsHeading: "Corpus de Artefactos Linguisticos",
     artifactsDesc: "Muestras textuales evaluadas a traves de dialectos y variedades demograficas",
-    dialectMapHeading: "Regiones Amplias de Variedades Linguisticas",
-    dialectMapNote: "Solo regiones amplias documentadas (sin coordenadas puntuales). Los registros sin geografia no se ubican.",
-    nonGeographicRegistersLabel: "Registros sin geografia (fuera del mapa)",
-    mapFallbackNote: "Mapa geografico no disponible; mostrando listado documentado de variedades.",
-    geographicSourceLabel: "Fuente",
-    regionUSLabel: "Estados Unidos (region amplia)",
-    regionNGLabel: "Nigeria (region amplia)",
-    regionGBLabel: "Reino Unido (region amplia)",
     colSampleText: "Texto de Muestra",
     colVariety: "Dialecto / Variedad",
     colExpected: "Salida Esperada",
@@ -218,14 +182,8 @@ export const dictionary: Record<Language, Translations> = {
     recommendationsHeading: "Directivas Estatutarias de Subsanacion",
     emptyStateTitle: "Simulacion Pendiente",
     emptyStateDesc: "Seleccione una alternativa de decision del arbol superior y haga clic en 'Ejecutar Evaluacion Etica' para calcular metricas estatutarias en tiempo real.",
-    loadingCasesText: "Cargando casos de linguistica computacional...",
-    loadingCaseSpecText: "Cargando especificacion del caso seleccionado...",
-    selectCaseForDecisionsText: "Seleccione un caso de estudio para mostrar alternativas de decision.",
-    charsLabel: "caracteres",
-    wasLabel: "antes",
-    loadingStatusText: "Cargando...",
     errorTitle: "Error de Simulacion",
-    retryButtonText: "Reintentar",
+    retryButtonText: "Cerrar",
     statusMinimalRisk: "Riesgo Minimo",
     statusSpecificTransparencyRisk: "Riesgo Especifico de Transparencia",
     statusHighRisk: "Alto Riesgo (Anexo III)",

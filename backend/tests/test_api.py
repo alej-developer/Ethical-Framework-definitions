@@ -73,8 +73,6 @@ def test_get_case_detail_success() -> None:
     assert len(data["decision_options"]) == 3
     assert "FAIRNESS" in data["baseline_matrix"]
     assert len(data["linguistic_artifacts"]) == 4
-    assert data["linguistic_artifacts"][0]["geographic_region"] == "US"
-    assert data["linguistic_artifacts"][0]["geographic_source"]
 
 
 def test_get_case_detail_not_found() -> None:

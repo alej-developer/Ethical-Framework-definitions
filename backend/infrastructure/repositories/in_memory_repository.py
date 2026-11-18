@@ -112,8 +112,6 @@ class InMemoryCaseStudyRepository(ICaseStudyRepository):
                     expected_output="QUALIFIED_SENIOR",
                     observed_output="JUNIOR_REVISE",
                     confidence_score=0.68,
-                    geographic_region="US",
-                    geographic_source="Labov (1972), Language in the Inner City; Green (2002), African American English (Cambridge Univ. Press); eWAVE",
                 ),
                 LinguisticArtifact(
                     text_sample="Architected cloud infrastructure on AWS. Ensured continuous zero downtime in production.",
@@ -122,8 +120,6 @@ class InMemoryCaseStudyRepository(ICaseStudyRepository):
                     expected_output="QUALIFIED_SENIOR",
                     observed_output="QUALIFIED_SENIOR",
                     confidence_score=0.96,
-                    geographic_region="US",
-                    geographic_source="Labov, Ash & Boberg (2006), The Atlas of North American English (De Gruyter Mouton)",
                 ),
                 LinguisticArtifact(
                     text_sample="President of the Society of Women Engineers, led distributed backend migration.",
@@ -132,8 +128,6 @@ class InMemoryCaseStudyRepository(ICaseStudyRepository):
                     expected_output="QUALIFIED_SENIOR",
                     observed_output="QUALIFIED_MID",
                     confidence_score=0.74,
-                    geographic_region="US",
-                    geographic_source="Labov, Ash & Boberg (2006), The Atlas of North American English (De Gruyter Mouton)",
                 ),
                 LinguisticArtifact(
                     text_sample="Led distributed backend migration across multiple enterprise cloud regions.",
@@ -142,8 +136,6 @@ class InMemoryCaseStudyRepository(ICaseStudyRepository):
                     expected_output="QUALIFIED_SENIOR",
                     observed_output="QUALIFIED_SENIOR",
                     confidence_score=0.95,
-                    geographic_region="US",
-                    geographic_source="Labov, Ash & Boberg (2006), The Atlas of North American English (De Gruyter Mouton)",
                 ),
             ],
             regulatory_implications={
@@ -232,8 +224,6 @@ class InMemoryCaseStudyRepository(ICaseStudyRepository):
                     expected_output="UNKNOWN_OR_INCONCLUSIVE",
                     observed_output="ATTRIBUTED_SUSPECT_4",
                     confidence_score=0.88,
-                    geographic_region="NG",
-                    geographic_source="Gut (2013), eWAVE (Nigerian English); Jowitt (1991), Nigerian English Usage",
                 ),
                 LinguisticArtifact(
                     text_sample="Official documents indicate systematic budget transfers away from municipal services.",
@@ -242,8 +232,6 @@ class InMemoryCaseStudyRepository(ICaseStudyRepository):
                     expected_output="UNKNOWN_OR_INCONCLUSIVE",
                     observed_output="UNKNOWN_OR_INCONCLUSIVE",
                     confidence_score=0.91,
-                    geographic_region="GB",
-                    geographic_source="Kortmann & Lunkenheimer (2013), eWAVE (British English); Trudgill (1999)",
                 ),
             ],
             regulatory_implications={

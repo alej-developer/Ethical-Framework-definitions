@@ -1,6 +1,7 @@
 /** EN: Right split pane component rendering interactive decision tree, rationale input, and real-time EU AI Act / matrix compliance metrics. | ES: Componente del panel derecho que renderiza el arbol de decision interactivo, entrada de justificacion y metricas de cumplimiento en tiempo real. */
 
 import { getTranslation, Translations } from "../i18n/translations.ts";
+import { ApiService } from "../services/api.ts";
 import { actions, appStore } from "../state/store.ts";
 import {
   BindingLevel,
@@ -10,7 +11,6 @@ import {
   FrameworkRegion,
   Language,
 } from "../types/index.ts";
-import { escapeHtml } from "../utils/escape_html.ts";
 
 // EN: Display order and label keys for regions and binding levels | ES: Orden de visualizacion y claves de etiqueta para regiones y niveles de vinculacion
 const REGION_ORDER: FrameworkRegion[] = ["EUROPE", "AMERICAS", "ASIA_PACIFIC", "AFRICA", "INTERNATIONAL"];
@@ -27,18 +27,6 @@ const BINDING_LABEL: Record<BindingLevel, keyof Translations> = {
   PROPOSED_LEGISLATION: "bindingProposedLegislation",
 };
 
-interface DecisionPaneSlice {
-  currentCase: CaseStudy | null;
-  selectedOptionId: string | null;
-  userRationale: string;
-  selectedFrameworks: string[];
-  availableFrameworks: FrameworkInfo[];
-  latestImpact: DecisionImpactResponse | null;
-  isLoading: boolean;
-  errorMessage: string | null;
-  language: Language;
-}
-
 export class DecisionPaneComponent {
   private container: HTMLElement;
 
@@ -52,68 +40,19 @@ export class DecisionPaneComponent {
   }
 
   private init(): void {
-    appStore.subscribeSelector<DecisionPaneSlice>(
-      (state) => ({
-        currentCase: state.currentCase,
-        selectedOptionId: state.selectedOptionId,
-        userRationale: state.userRationale,
-        selectedFrameworks: state.selectedFrameworks,
-        availableFrameworks: state.availableFrameworks,
-        latestImpact: state.latestImpact,
-        isLoading: state.isLoading,
-        errorMessage: state.errorMessage,
-        language: state.language,
-      }),
-      (slice, prevSlice) => {
-        // EN: Surgical DOM update when only userRationale changes so textarea preserves focus and caret | ES: Actualizacion quirurgica del DOM cuando solo cambia userRationale para que el textarea conserve foco y cursor
-        if (
-          prevSlice &&
-          prevSlice.currentCase === slice.currentCase &&
-          prevSlice.selectedOptionId === slice.selectedOptionId &&
-          prevSlice.selectedFrameworks === slice.selectedFrameworks &&
-          prevSlice.availableFrameworks === slice.availableFrameworks &&
-          prevSlice.latestImpact === slice.latestImpact &&
-          prevSlice.isLoading === slice.isLoading &&
-          prevSlice.errorMessage === slice.errorMessage &&
-          prevSlice.language === slice.language &&
-          prevSlice.userRationale !== slice.userRationale
-        ) {
-          this.updateRationaleDom(slice);
-          return;
-        }
-
-        this.render(
-          slice.currentCase,
-          slice.selectedOptionId,
-          slice.userRationale,
-          slice.selectedFrameworks,
-          slice.availableFrameworks,
-          slice.latestImpact,
-          slice.isLoading,
-          slice.errorMessage,
-          slice.language,
-        );
-      },
-    );
-  }
-
-  private updateRationaleDom(slice: DecisionPaneSlice): void {
-    const textarea = this.container.querySelector<HTMLTextAreaElement>("#input-user-rationale");
-    if (textarea && textarea.value !== slice.userRationale) {
-      textarea.value = slice.userRationale;
-    }
-
-    const charCounter = this.container.querySelector<HTMLElement>("#rationale-char-count");
-    if (charCounter) {
-      charCounter.textContent = `${slice.userRationale.trim().length} ${getTranslation("charsLabel", slice.language)}`;
-    }
-
-    const isRationaleValid = slice.userRationale.trim().length >= 10;
-    const canSubmit = Boolean(slice.currentCase && slice.selectedOptionId && isRationaleValid && !slice.isLoading);
-    const submitBtn = this.container.querySelector<HTMLButtonElement>("#btn-execute-eval");
-    if (submitBtn) {
-      submitBtn.disabled = !canSubmit;
-    }
+    appStore.subscribe((state) => {
+      this.render(
+        state.currentCase,
+        state.selectedOptionId,
+        state.userRationale,
+        state.selectedFrameworks,
+        state.availableFrameworks,
+        state.latestImpact,
+        state.isLoading,
+        state.errorMessage,
+        state.language,
+      );
+    });
   }
 
   private render(
@@ -131,7 +70,7 @@ export class DecisionPaneComponent {
     const canSubmit = Boolean(currentCase && selectedOptionId && isRationaleValid && !isLoading);
 
     this.container.innerHTML = `
-      <div class="pane ${isLoading ? "is-loading" : ""}" role="region" aria-labelledby="right-pane-heading" aria-busy="${isLoading ? "true" : "false"}">
+      <div class="pane" role="region" aria-labelledby="right-pane-heading">
         <div class="pane-header">
           <h2 id="right-pane-heading" class="pane-title">${getTranslation("decisionTreeHeading", lang)}</h2>
           <p class="pane-subtitle">${getTranslation("decisionTreeDesc", lang)}</p>
@@ -142,8 +81,8 @@ export class DecisionPaneComponent {
             errorMessage
               ? `
             <div class="alert-error" role="alert" aria-live="assertive">
-              <span><strong>${getTranslation("errorTitle", lang)}:</strong> ${escapeHtml(errorMessage)}</span>
-              <button type="button" id="btn-dismiss-error" class="btn-lang-toggle" ${isLoading ? "disabled" : ""}>${getTranslation("retryButtonText", lang)}</button>
+              <span><strong>${getTranslation("errorTitle", lang)}:</strong> ${errorMessage}</span>
+              <button type="button" id="btn-dismiss-error" class="btn-lang-toggle">${getTranslation("retryButtonText", lang)}</button>
             </div>
           `
               : ""
@@ -154,40 +93,41 @@ export class DecisionPaneComponent {
               ? `
             <div class="empty-state">
               <p class="empty-state-title">${getTranslation("emptyStateTitle", lang)}</p>
-              <p class="empty-state-text">${getTranslation("selectCaseForDecisionsText", lang)}</p>
+              <p class="empty-state-text">Select a case study to display decision alternatives.</p>
             </div>
           `
               : `
             <!-- EN: Interactive Decision Tree | ES: Arbol de Decision Interactivo -->
-            <fieldset class="section-block decision-fieldset">
-              <legend class="section-label">${getTranslation("decisionTreeHeading", lang)}</legend>
+            <div class="section-block">
+              <span class="section-label">${getTranslation("decisionTreeHeading", lang)}</span>
               <div class="decision-tree-group" role="radiogroup" aria-label="${getTranslation("decisionTreeHeading", lang)}">
                 ${currentCase.decision_options
                   .map(
                     (opt) => `
                   <label 
                     class="decision-option-card ${opt.id === selectedOptionId ? "selected" : ""}" 
-                    for="radio-${escapeHtml(opt.id)}"
+                    for="radio-${opt.id}"
                   >
                     <input 
                       type="radio" 
-                      id="radio-${escapeHtml(opt.id)}" 
+                      id="radio-${opt.id}" 
                       name="decision-option" 
                       class="decision-radio" 
-                      value="${escapeHtml(opt.id)}"
+                      value="${opt.id}"
                       ${opt.id === selectedOptionId ? "checked" : ""}
+                      aria-checked="${opt.id === selectedOptionId ? "true" : "false"}"
                     />
                     <div class="option-body">
-                      <span class="option-strategy-chip">${escapeHtml(opt.strategy)}</span>
-                      <strong class="option-title">${escapeHtml(opt.title)}</strong>
-                      <p class="option-desc">${escapeHtml(opt.description)}</p>
+                      <span class="option-strategy-chip">${opt.strategy}</span>
+                      <strong class="option-title">${opt.title}</strong>
+                      <p class="option-desc">${opt.description}</p>
                       
                       <div class="modifier-chips-row" aria-label="Estimated Impact Modifiers">
                         ${Object.entries(opt.dimension_modifiers)
                           .map(([dim, val]) => {
                             const sign = val > 0 ? "+" : "";
                             const cls = val > 0 ? "positive" : val < 0 ? "negative" : "neutral";
-                            return `<span class="modifier-chip ${cls}">${escapeHtml(dim)}: ${sign}${val.toFixed(2)}</span>`;
+                            return `<span class="modifier-chip ${cls}">${dim}: ${sign}${val.toFixed(2)}</span>`;
                           })
                           .join("")}
                       </div>
@@ -197,20 +137,21 @@ export class DecisionPaneComponent {
                   )
                   .join("")}
               </div>
-            </fieldset>
+            </div>
 
             <!-- EN: Decision Rationale Form | ES: Formulario de Justificacion de la Decision -->
             <div class="section-block">
-              <label for="input-user-rationale" class="section-label">${getTranslation("rationaleHeading", lang)}</label>
+              <span class="section-label">${getTranslation("rationaleHeading", lang)}</span>
               <textarea 
                 id="input-user-rationale" 
                 class="rationale-input" 
-                placeholder="${escapeHtml(getTranslation("rationalePlaceholder", lang))}"
+                placeholder="${getTranslation("rationalePlaceholder", lang)}"
+                aria-label="${getTranslation("rationaleHeading", lang)}"
                 aria-describedby="rationale-hint"
-              >${escapeHtml(rationale)}</textarea>
+              >${rationale}</textarea>
               <div id="rationale-hint" class="form-hint">
                 <span>${getTranslation("rationaleMinCharsNote", lang)}</span>
-                <span id="rationale-char-count" class="tabular-num">${rationale.trim().length} ${getTranslation("charsLabel", lang)}</span>
+                <span class="tabular-num">${rationale.trim().length} chars</span>
               </div>
             </div>
 
@@ -250,28 +191,25 @@ export class DecisionPaneComponent {
                     impact.matrix.transparency.baseline_score,
                     impact.matrix.transparency.decision_score,
                     impact.matrix.transparency.delta,
-                    lang,
                   )}
                   ${this.renderDimensionCard(
                     getTranslation("dimensionAccountability", lang),
                     impact.matrix.accountability.baseline_score,
                     impact.matrix.accountability.decision_score,
                     impact.matrix.accountability.delta,
-                    lang,
                   )}
                   ${this.renderDimensionCard(
                     getTranslation("dimensionFairness", lang),
                     impact.matrix.fairness.baseline_score,
                     impact.matrix.fairness.decision_score,
                     impact.matrix.fairness.delta,
-                    lang,
                   )}
                 </div>
 
                 <!-- EN: Overall Alignment Index | ES: Indice de Alineacion General -->
-                <div class="matrix-card matrix-card-centered">
+                <div class="matrix-card" style="align-items: center; text-align: center;">
                   <span class="matrix-dim-name">${getTranslation("overallAlignmentHeading", lang)}</span>
-                  <span class="matrix-score-val matrix-score-val-lg tabular-num">
+                  <span class="matrix-score-val tabular-num" style="font-size: 2.2rem;">
                     ${impact.matrix.overall_alignment.toFixed(3)}
                   </span>
                 </div>
@@ -282,7 +220,7 @@ export class DecisionPaneComponent {
                     <span class="verdict-sub">${getTranslation("riskTierLabel", lang)}</span>
                     <strong class="verdict-main">${this.translateRisk(impact.overall_risk_tier, lang)}</strong>
                   </div>
-                  <div class="verdict-text-group verdict-text-group-end">
+                  <div class="verdict-text-group" style="text-align: right;">
                     <span class="verdict-sub">${getTranslation("complianceStatusLabel", lang)}</span>
                     <strong class="verdict-main">${this.translateCompliance(impact.overall_compliance, lang)}</strong>
                   </div>
@@ -292,7 +230,7 @@ export class DecisionPaneComponent {
                 <div class="section-block">
                   <span class="section-label">${getTranslation("tradeOffHeading", lang)}</span>
                   <div class="tradeoff-box">
-                    <p>${escapeHtml(impact.trade_off_analysis)}</p>
+                    <p>${impact.trade_off_analysis}</p>
                   </div>
                 </div>
 
@@ -300,7 +238,7 @@ export class DecisionPaneComponent {
                 <div class="section-block">
                   <span class="section-label">${getTranslation("recommendationsHeading", lang)}</span>
                   <ul class="recs-list">
-                    ${impact.recommendations.map((rec) => `<li>${escapeHtml(rec)}</li>`).join("")}
+                    ${impact.recommendations.map((rec) => `<li>${rec}</li>`).join("")}
                   </ul>
                 </div>
               `
@@ -312,7 +250,7 @@ export class DecisionPaneComponent {
       </div>
     `;
 
-    this.attachEventListeners();
+    this.attachEventListeners(currentCase, selectedOptionId, rationale, frameworks);
   }
 
   private renderFrameworkSelector(available: FrameworkInfo[], selected: string[], lang: Language): string {
@@ -323,14 +261,14 @@ export class DecisionPaneComponent {
       const items = group
         .map(
           (f) => `
-          <label class="reg-item framework-option" for="cb-framework-${escapeHtml(f.id)}">
-            <input type="checkbox" id="cb-framework-${escapeHtml(f.id)}" class="cb-framework" value="${escapeHtml(f.id)}" ${selected.includes(f.id) ? "checked" : ""} />
+          <label class="reg-item framework-option" for="cb-framework-${f.id}">
+            <input type="checkbox" id="cb-framework-${f.id}" class="cb-framework" value="${f.id}" ${selected.includes(f.id) ? "checked" : ""} />
             <div class="framework-option-body">
               <div class="framework-option-title-row">
-                <strong>${escapeHtml(f.name)}</strong>
-                <span class="meta-chip binding-chip binding-${escapeHtml(f.binding_level.toLowerCase())}">${getTranslation(BINDING_LABEL[f.binding_level], lang)}</span>
+                <strong>${f.name}</strong>
+                <span class="meta-chip binding-chip binding-${f.binding_level.toLowerCase()}">${getTranslation(BINDING_LABEL[f.binding_level], lang)}</span>
               </div>
-              <span class="framework-option-desc">${escapeHtml(f.jurisdiction)} &middot; ${f.focus_areas.map((area) => escapeHtml(area)).join(" &middot; ")}</span>
+              <span class="framework-option-desc">${f.jurisdiction} &middot; ${f.focus_areas.join(" &middot; ")}</span>
             </div>
           </label>`,
         )
@@ -343,19 +281,19 @@ export class DecisionPaneComponent {
     }).join("");
   }
 
-  private renderDimensionCard(name: string, baseline: number, current: number, delta: number, lang: Language): string {
+  private renderDimensionCard(name: string, baseline: number, current: number, delta: number): string {
     const sign = delta > 0 ? "+" : "";
     const deltaClass = delta > 0 ? "positive" : delta < 0 ? "negative" : "neutral";
 
     return `
       <div class="impact-card">
         <div class="impact-card-top">
-          <span class="impact-dim">${escapeHtml(name)}</span>
+          <span class="impact-dim">${name}</span>
           <span class="delta-pill ${deltaClass}">${sign}${delta.toFixed(2)}</span>
         </div>
         <div class="impact-score-row">
           <span class="impact-score-current tabular-num">${current.toFixed(2)}</span>
-          <span class="impact-score-prev tabular-num">${getTranslation("wasLabel", lang)} ${baseline.toFixed(2)}</span>
+          <span class="impact-score-prev tabular-num">was ${baseline.toFixed(2)}</span>
         </div>
       </div>
     `;
@@ -381,7 +319,12 @@ export class DecisionPaneComponent {
     return getTranslation("verdictCompliant", lang);
   }
 
-  private attachEventListeners(): void {
+  private attachEventListeners(
+    currentCase: CaseStudy | null,
+    selectedOptionId: string | null,
+    rationale: string,
+    frameworks: string[],
+  ): void {
     // EN: Option selection listener | ES: Escuchador de seleccion de opcion
     const radios = this.container.querySelectorAll<HTMLInputElement>(".decision-radio");
     radios.forEach((r) => {
@@ -406,27 +349,33 @@ export class DecisionPaneComponent {
       });
     });
 
-    // EN: Submit button listener reading live state from store | ES: Escuchador de boton de envio leyendo estado vivo desde el store
+    // EN: Submit button listener | ES: Escuchador de boton de envio
     const submitBtn = this.container.querySelector<HTMLButtonElement>("#btn-execute-eval");
-    if (submitBtn) {
+    if (submitBtn && currentCase && selectedOptionId) {
       submitBtn.addEventListener("click", async () => {
-        const { currentCase, selectedOptionId, userRationale, selectedFrameworks } = appStore.getState();
-        if (currentCase && selectedOptionId && userRationale.trim().length >= 10) {
-          await actions.submitDecisionEvaluation(
+        actions.setLoading(true);
+        try {
+          const impact = await ApiService.submitDecision(
             currentCase.id,
             selectedOptionId,
-            userRationale,
-            selectedFrameworks,
+            rationale,
+            frameworks,
           );
+          actions.setImpactResult(impact);
+        } catch (err: unknown) {
+          const msg = err instanceof Error ? err.message : "Decision evaluation failed.";
+          actions.setError(msg);
+        } finally {
+          actions.setLoading(false);
         }
       });
     }
 
-    // EN: Error retry button | ES: Boton de reintento ante error
-    const retryBtn = this.container.querySelector<HTMLButtonElement>("#btn-dismiss-error");
-    if (retryBtn) {
-      retryBtn.addEventListener("click", async () => {
-        await actions.retryLastOperation();
+    // EN: Error dismiss button | ES: Boton de cierre de error
+    const dismissBtn = this.container.querySelector<HTMLButtonElement>("#btn-dismiss-error");
+    if (dismissBtn) {
+      dismissBtn.addEventListener("click", () => {
+        actions.clearError();
       });
     }
   }
