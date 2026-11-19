@@ -34,6 +34,18 @@ export interface FrameworkInfo {
   focus_areas: string[];
 }
 
+/** EN: Consultation-only global legislation entry returned by GET /api/v1/frameworks/reference. | ES: Entrada de legislacion global solo para consulta devuelta por GET /api/v1/frameworks/reference. */
+export interface ReferenceFrameworkInfo {
+  id: string;
+  name: string;
+  jurisdiction: string;
+  region: FrameworkRegion;
+  binding_level: BindingLevel;
+  year: string;
+  summary: string;
+  official_reference: string;
+}
+
 export interface LinguisticArtifact {
   text_sample: string;
   dialect_or_variety: string;
@@ -172,6 +184,7 @@ export interface AppState {
   userRationale: string;
   selectedFrameworks: string[];
   availableFrameworks: FrameworkInfo[];
+  referenceFrameworks: ReferenceFrameworkInfo[];
   latestImpact: DecisionImpactResponse | null;
   isLoading: boolean;
   errorMessage: string | null;

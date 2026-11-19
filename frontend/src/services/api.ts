@@ -5,6 +5,7 @@ import {
   CaseStudySummary,
   DecisionImpactResponse,
   FrameworkInfo,
+  ReferenceFrameworkInfo,
   StandardErrorResponse,
 } from "../types/index.ts";
 
@@ -34,6 +35,15 @@ export class ApiService {
     const response = await fetch(`${BASE_URL}/frameworks`);
     if (!response.ok) {
       throw new Error(`Failed to load frameworks: HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
+  public static async fetchReferenceFrameworks(): Promise<ReferenceFrameworkInfo[]> {
+    // EN: Retrieve consultation-only global AI legislation catalogue | ES: Recuperar catalogo global de legislacion de IA solo para consulta
+    const response = await fetch(`${BASE_URL}/frameworks/reference`);
+    if (!response.ok) {
+      throw new Error(`Failed to load reference frameworks: HTTP ${response.status}`);
     }
     return response.json();
   }

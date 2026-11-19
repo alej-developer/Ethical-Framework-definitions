@@ -23,11 +23,26 @@ def test_frameworks_endpoint() -> None:
     response = client.get("/api/v1/frameworks")
     assert response.status_code == 200
     frameworks = response.json()
+    assert len(frameworks) == 15
     assert {f["id"] for f in frameworks} == {ft.value for ft in FrameworkType}
     for f in frameworks:
         assert f["name"] and f["jurisdiction"] and f["focus_areas"]
         assert f["region"] in {r.value for r in FrameworkRegion}
         assert f["binding_level"] in {b.value for b in BindingLevel}
+
+
+def test_reference_frameworks_endpoint() -> None:
+    """EN: Test GET /api/v1/frameworks/reference returns global consultation legislation across all regions. | ES: Probar que GET /api/v1/frameworks/reference retorne la legislacion global de consulta en todas las regiones."""
+    response = client.get("/api/v1/frameworks/reference")
+    assert response.status_code == 200
+    items = response.json()
+    assert len(items) >= 15
+    regions_covered = {item["region"] for item in items}
+    assert regions_covered == {r.value for r in FrameworkRegion}
+    for item in items:
+        assert item["id"] and item["name"] and item["jurisdiction"]
+        assert item["year"] and item["summary"] and item["official_reference"]
+        assert item["binding_level"] in {b.value for b in BindingLevel}
 
 
 def test_frameworks_endpoint_matches_evaluator_metadata() -> None:

@@ -120,6 +120,17 @@ def list_frameworks() -> list[dict[str, Any]]:
     return [{"id": framework.value, **FRAMEWORK_CATALOGUE[framework]} for framework in FrameworkType]
 
 
+@router.get(
+    "/frameworks/reference",
+    status_code=status.HTTP_200_OK,
+    summary="EN: List Global Reference AI Legislation | ES: Listar Legislacion Global de IA de Consulta",
+    description="EN: Returns a curated consultation catalogue of additional global AI laws, bills, strategies and international instruments outside the 15 executable evaluators. | ES: Retorna un catalogo de consulta con legislaciones, proyectos de ley, estrategias e instrumentos internacionales adicionales de IA fuera de los 15 evaluadores ejecutables.",
+)
+def list_reference_frameworks() -> list[dict[str, Any]]:
+    """EN: Return consultation-only global AI legislation catalogue. | ES: Retornar catalogo global de legislacion de IA solo para consulta."""
+    return GLOBAL_REFERENCE_LEGISLATION
+
+
 # EN: Presentation metadata per framework; must cover every FrameworkType | ES: Metadatos de presentacion por marco; debe cubrir todos los FrameworkType
 FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
     FrameworkType.EU_AI_ACT: {
@@ -147,6 +158,18 @@ FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
             "Contestability & redress",
         ],
     },
+    FrameworkType.COE_AI_CONVENTION: {
+        "name": "Council of Europe Framework Convention on AI (CETS No. 225, 2024)",
+        "jurisdiction": "Council of Europe (International Treaty)",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "Human rights, democracy & rule of law",
+            "Equality & non-discrimination (Article 10)",
+            "Procedural safeguards & effective remedies (Articles 14-15)",
+            "Privacy & data governance (Article 11)",
+        ],
+    },
     FrameworkType.NIST_AI_RMF: {
         "name": "NIST AI Risk Management Framework 1.0 (NIST AI 100-1)",
         "jurisdiction": "United States",
@@ -159,6 +182,18 @@ FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
             "Harmful bias management",
         ],
     },
+    FrameworkType.COLORADO_AI_ACT: {
+        "name": "Colorado Artificial Intelligence Act (SB 24-205, 2024)",
+        "jurisdiction": "United States (Colorado)",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "Duty of reasonable care against algorithmic discrimination",
+            "Consequential decisions (employment, healthcare, legal)",
+            "Consumer notice & adverse decision explanations",
+            "Right to human review & annual impact assessments",
+        ],
+    },
     FrameworkType.BRAZIL_PL_2338: {
         "name": "Brazil AI Bill (PL 2338/2023)",
         "jurisdiction": "Brazil",
@@ -169,6 +204,18 @@ FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
             "High-risk classification",
             "Algorithmic impact assessment",
             "Non-discrimination",
+        ],
+    },
+    FrameworkType.PERU_AI_LAW_31814: {
+        "name": "Peru AI Law (Ley N. 31814, 2023)",
+        "jurisdiction": "Peru",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "focus_areas": [
+            "Risk-based AI governance",
+            "Fundamental rights & non-discrimination",
+            "Human supervision & citizen transparency",
+            "Personal data governance",
         ],
     },
     FrameworkType.KOREA_AI_BASIC_ACT: {
@@ -230,6 +277,18 @@ FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
             "Correction, erasure & grievance rights",
         ],
     },
+    FrameworkType.AU_CONTINENTAL_AI: {
+        "name": "African Union Continental Artificial Intelligence Strategy (2024)",
+        "jurisdiction": "African Union",
+        "region": FrameworkRegion.AFRICA.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "Linguistic & cultural inclusion for underrepresented varieties",
+            "Data sovereignty & Malabo Convention alignment",
+            "Human-centric oversight & fundamental rights",
+            "Stakeholder transparency",
+        ],
+    },
     FrameworkType.IEEE_7000_SERIES: {
         "name": "IEEE 7000-2021 and IEEE 7001-2021 Standards",
         "jurisdiction": "International",
@@ -242,7 +301,238 @@ FRAMEWORK_CATALOGUE: dict[FrameworkType, dict[str, Any]] = {
             "Procedural fairness across demographic dialects",
         ],
     },
+    FrameworkType.ISO_IEC_42001: {
+        "name": "ISO/IEC 42001:2023 Artificial Intelligence Management System (AIMS)",
+        "jurisdiction": "International (ISO/IEC)",
+        "region": FrameworkRegion.INTERNATIONAL.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "focus_areas": [
+            "Certifiable AI management system lifecycle",
+            "AI System Impact Assessment (Clause 6.1.4)",
+            "Data provenance & quality gates (Annex A.7)",
+            "Human oversight & stakeholder documentation (Annex A.8-A.9)",
+        ],
+    },
 }
+
+# EN: Consultation-only global AI legislation catalogue covering additional jurisdictions and international instruments | ES: Catalogo global de legislacion de IA solo para consulta que cubre jurisdicciones e instrumentos internacionales adicionales
+GLOBAL_REFERENCE_LEGISLATION: list[dict[str, Any]] = [
+    # Europe
+    {
+        "id": "REF_GDPR_ART22",
+        "name": "EU General Data Protection Regulation (GDPR, Article 22)",
+        "jurisdiction": "European Union / EEA",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "year": "2018",
+        "summary": "Right not to be subject to solely automated decision-making, including profiling, producing legal or similarly significant effects.",
+        "official_reference": "Regulation (EU) 2016/679, Articles 5, 6, 9 and 22",
+    },
+    {
+        "id": "REF_SPAIN_AESIA",
+        "name": "Spain Royal Decree 729/2023 (AESIA Statute)",
+        "jurisdiction": "Spain",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "year": "2023",
+        "summary": "Establishes the Spanish Agency for the Supervision of Artificial Intelligence (AESIA), the first national AI supervisory authority in the EU.",
+        "official_reference": "Real Decreto 729/2023, BOE",
+    },
+    {
+        "id": "REF_ITALY_AI_LAW",
+        "name": "Italy National AI Law (Law No. 132/2025 / DDL 1146)",
+        "jurisdiction": "Italy",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "year": "2025",
+        "summary": "National framework complementing the EU AI Act on healthcare, labor, copyright, public administration, and judicial AI uses.",
+        "official_reference": "Legge sull'intelligenza artificiale (Senato DDL 1146)",
+    },
+    {
+        "id": "REF_SWITZERLAND_AI",
+        "name": "Switzerland Federal Council AI Regulatory Approach",
+        "jurisdiction": "Switzerland",
+        "region": FrameworkRegion.EUROPE.value,
+        "binding_level": BindingLevel.PROPOSED_LEGISLATION.value,
+        "year": "2025",
+        "summary": "Sector-specific regulatory strategy aligned with ratification of the Council of Europe AI Convention rather than a single horizontal act.",
+        "official_reference": "Swiss Federal Council / OFCOM AI Overview (2025)",
+    },
+    # Americas
+    {
+        "id": "REF_NYC_LL144",
+        "name": "New York City Local Law 144 (Automated Employment Decision Tools)",
+        "jurisdiction": "United States (New York City)",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "year": "2023",
+        "summary": "Requires annual independent bias audits, public audit summaries, and candidate notices before using automated hiring tools.",
+        "official_reference": "NYC Admin. Code § 20-870 et seq. (DCWP Rules)",
+    },
+    {
+        "id": "REF_CALIFORNIA_SB942",
+        "name": "California AI Transparency Act (SB 942)",
+        "jurisdiction": "United States (California)",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.LEGALLY_BINDING.value,
+        "year": "2024",
+        "summary": "Mandates AI detection tools and latent/manifest provenance disclosures for large-scale generative AI providers.",
+        "official_reference": "California Bus. & Prof. Code §§ 22757.1-22757.5",
+    },
+    {
+        "id": "REF_CANADA_GENAI_CODE",
+        "name": "Canada Voluntary Code of Conduct on Generative AI (and AIDA reference)",
+        "jurisdiction": "Canada",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2023",
+        "summary": "Voluntary commitments on accountability, safety, fairness, transparency, and human oversight following the prorogation of Bill C-27 (AIDA).",
+        "official_reference": "ISED Canada Voluntary Code of Conduct (2023)",
+    },
+    {
+        "id": "REF_CHILE_AI_BILL",
+        "name": "Chile Artificial Intelligence Regulation Bill (Boletin 16.821-19)",
+        "jurisdiction": "Chile",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.PROPOSED_LEGISLATION.value,
+        "year": "2024",
+        "summary": "Risk-based legislative proposal inspired by the EU AI Act establishing prohibited practices, high-risk duties, and institutional governance.",
+        "official_reference": "Camara de Diputadas y Diputados de Chile, Boletin 16.821-19",
+    },
+    {
+        "id": "REF_COLOMBIA_CONPES_4144",
+        "name": "Colombia National Artificial Intelligence Policy (CONPES 4144)",
+        "jurisdiction": "Colombia",
+        "region": FrameworkRegion.AMERICAS.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2025",
+        "summary": "National public policy roadmap addressing ethical AI governance, data infrastructure, risk management, and talent development.",
+        "official_reference": "DNP Colombia, Documento CONPES 4144 (2025)",
+    },
+    # Asia-Pacific
+    {
+        "id": "REF_AUSTRALIA_AI_SAFETY",
+        "name": "Australia Voluntary AI Safety Standard & Proposed Mandatory Guardrails",
+        "jurisdiction": "Australia",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2024",
+        "summary": "Ten voluntary guardrails covering accountability, risk management, testing, transparency, and human control in high-risk settings.",
+        "official_reference": "Australian Dept. of Industry, Science and Resources (2024)",
+    },
+    {
+        "id": "REF_ASEAN_AI_GUIDE",
+        "name": "ASEAN Guide on AI Governance and Ethics (incl. Generative AI Expansion)",
+        "jurisdiction": "ASEAN (Southeast Asia)",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2024",
+        "summary": "Regional interoperability guide promoting transparency, fairness, human-centricity, and risk-based governance across ASEAN member states.",
+        "official_reference": "ASEAN Digital Ministers' Meeting (ADGMIN, 2024-2025)",
+    },
+    {
+        "id": "REF_NZ_ALGORITHM_CHARTER",
+        "name": "Algorithm Charter for Aotearoa New Zealand",
+        "jurisdiction": "New Zealand",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2020",
+        "summary": "Public-sector commitment to transparency, Treaty of Waitangi partnership, bias mitigation, and human oversight in government algorithms.",
+        "official_reference": "Stats NZ / data.govt.nz Algorithm Charter",
+    },
+    {
+        "id": "REF_TAIWAN_AI_BASIC_ACT",
+        "name": "Taiwan Draft Artificial Intelligence Basic Act",
+        "jurisdiction": "Taiwan",
+        "region": FrameworkRegion.ASIA_PACIFIC.value,
+        "binding_level": BindingLevel.PROPOSED_LEGISLATION.value,
+        "year": "2024",
+        "summary": "Framework bill establishing seven core AI principles (sustainability, human autonomy, privacy, transparency, fairness, accountability, security).",
+        "official_reference": "National Science and Technology Council (NSTC, 2024)",
+    },
+    # Africa
+    {
+        "id": "REF_SOUTH_AFRICA_AI_POLICY",
+        "name": "South Africa National AI Policy Framework",
+        "jurisdiction": "South Africa",
+        "region": FrameworkRegion.AFRICA.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2024",
+        "summary": "National policy framework emphasizing ethical AI, POPIA data protection alignment, bias prevention, and inclusive digital development.",
+        "official_reference": "DCDT South Africa, National AI Policy Framework (2024)",
+    },
+    {
+        "id": "REF_NIGERIA_NAIS",
+        "name": "Nigeria National Artificial Intelligence Strategy (NAIS)",
+        "jurisdiction": "Nigeria",
+        "region": FrameworkRegion.AFRICA.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2024",
+        "summary": "National strategy prioritizing local language datasets, ethical governance, NDPA data privacy compliance, and inclusive innovation.",
+        "official_reference": "Federal Ministry of Communications, Innovation & Digital Economy (2024)",
+    },
+    {
+        "id": "REF_KENYA_AI_STRATEGY",
+        "name": "Kenya National Artificial Intelligence Strategy (2025-2030)",
+        "jurisdiction": "Kenya",
+        "region": FrameworkRegion.AFRICA.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2025",
+        "summary": "Five-year governance and innovation framework aligned with Kenya's Data Protection Act and ethical AI standards.",
+        "official_reference": "Ministry of Information, Communications and the Digital Economy (2025)",
+    },
+    {
+        "id": "REF_RWANDA_AI_POLICY",
+        "name": "Rwanda National Artificial Intelligence Policy",
+        "jurisdiction": "Rwanda",
+        "region": FrameworkRegion.AFRICA.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2023",
+        "summary": "Responsible AI adoption roadmap combining ethical guidelines, data governance, and public-sector capacity building.",
+        "official_reference": "Ministry of ICT and Innovation, Republic of Rwanda (2023)",
+    },
+    # International
+    {
+        "id": "REF_UNESCO_AI_ETHICS",
+        "name": "UNESCO Recommendation on the Ethics of Artificial Intelligence",
+        "jurisdiction": "Global (193 UNESCO Member States)",
+        "region": FrameworkRegion.INTERNATIONAL.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2021",
+        "summary": "First global normative instrument on AI ethics covering proportionality, fairness, linguistic diversity, and Ethical Impact Assessment (EIA).",
+        "official_reference": "UNESCO SHS/BIO/PI/2021/1 (Adopted Nov. 2021)",
+    },
+    {
+        "id": "REF_OECD_AI_PRINCIPLES",
+        "name": "OECD Recommendation of the Council on Artificial Intelligence",
+        "jurisdiction": "OECD & Adherent Countries",
+        "region": FrameworkRegion.INTERNATIONAL.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2024",
+        "summary": "Intergovernmental principles for trustworthy AI (updated May 2024) addressing human rights, transparency, robustness, and accountability.",
+        "official_reference": "OECD/LEGAL/0449 (Revised May 2024)",
+    },
+    {
+        "id": "REF_UNGA_AI_RES",
+        "name": "UN General Assembly Resolution on Safe, Secure and Trustworthy AI",
+        "jurisdiction": "United Nations (193 Member States)",
+        "region": FrameworkRegion.INTERNATIONAL.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2024",
+        "summary": "Consensus UN resolution affirming human rights, non-discrimination, privacy, and sustainable development throughout the AI lifecycle.",
+        "official_reference": "UNGA Resolution A/RES/78/265 (March 2024)",
+    },
+    {
+        "id": "REF_G7_HIROSHIMA",
+        "name": "G7 Hiroshima AI Process International Guiding Principles & Code of Conduct",
+        "jurisdiction": "G7 & International Partners",
+        "region": FrameworkRegion.INTERNATIONAL.value,
+        "binding_level": BindingLevel.VOLUNTARY_STANDARD.value,
+        "year": "2023",
+        "summary": "Voluntary international principles and reporting framework for organizations developing advanced and generative AI systems.",
+        "official_reference": "G7 Hiroshima AI Process (Oct. 2023)",
+    },
+]
 
 
 # EN: Case Studies Endpoints | ES: Puntos Finales de Casos de Estudio

@@ -7,6 +7,7 @@ import {
   DecisionImpactResponse,
   FrameworkInfo,
   Language,
+  ReferenceFrameworkInfo,
 } from "../types/index.ts";
 
 export type Listener<T> = (state: T) => void;
@@ -58,6 +59,7 @@ const initialAppState: AppState = {
   userRationale: "",
   selectedFrameworks: ["EU_AI_ACT", "IEEE_7000_SERIES"],
   availableFrameworks: [],
+  referenceFrameworks: [],
   latestImpact: null,
   isLoading: false,
   errorMessage: null,
@@ -86,6 +88,10 @@ export const actions = {
     const kept = appStore.getState().selectedFrameworks.filter((id) => known.has(id));
     const selectedFrameworks = kept.length > 0 ? kept : availableFrameworks.slice(0, 1).map((f) => f.id);
     appStore.setState({ availableFrameworks, selectedFrameworks });
+  },
+
+  setReferenceFrameworks: (referenceFrameworks: ReferenceFrameworkInfo[]): void => {
+    appStore.setState({ referenceFrameworks });
   },
 
   setCurrentCase: (currentCase: CaseStudy): void => {

@@ -828,3 +828,69 @@ body {
   max-width: 440px;
   margin: 0 auto;
 }
+
+/* EN: Global Reference Legislation Consultation Section | ES: Seccion de Consulta de Legislacion Global de Referencia */
+.reference-legislation-section {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-lg);
+}
+
+.reference-legislation-details {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+}
+
+.reference-legislation-summary {
+  padding: var(--space-md);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  list-style: none;
+  transition: background 0.15s ease;
+}
+
+.reference-legislation-summary::-webkit-details-marker {
+  display: none;
+}
+
+.reference-legislation-summary:hover {
+  background: var(--bg-surface-hover);
+}
+
+.reference-legislation-body {
+  padding: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  background: var(--bg-pane);
+}
+
+.reference-legislation-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.reference-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.reference-item-summary {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.reference-item-source {
+  font-family: var(--font-family-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}

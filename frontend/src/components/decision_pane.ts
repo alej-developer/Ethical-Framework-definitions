@@ -10,6 +10,7 @@ import {
   FrameworkInfo,
   FrameworkRegion,
   Language,
+  ReferenceFrameworkInfo,
 } from "../types/index.ts";
 
 // EN: Display order and label keys for regions and binding levels | ES: Orden de visualizacion y claves de etiqueta para regiones y niveles de vinculacion
@@ -47,6 +48,7 @@ export class DecisionPaneComponent {
         state.userRationale,
         state.selectedFrameworks,
         state.availableFrameworks,
+        state.referenceFrameworks,
         state.latestImpact,
         state.isLoading,
         state.errorMessage,
@@ -61,6 +63,7 @@ export class DecisionPaneComponent {
     rationale: string,
     frameworks: string[],
     availableFrameworks: FrameworkInfo[],
+    referenceFrameworks: ReferenceFrameworkInfo[],
     impact: DecisionImpactResponse | null,
     isLoading: boolean,
     errorMessage: string | null,
@@ -246,6 +249,27 @@ export class DecisionPaneComponent {
             </div>
           `
           }
+
+          ${
+            referenceFrameworks.length > 0
+              ? `
+            <!-- EN: Global AI Legislation Reference Catalogue (Consultation Only) | ES: Catalogo Global de Legislacion de IA (Solo Consulta) -->
+            <div class="section-block reference-legislation-section">
+              <span class="section-label">${getTranslation("referenceLegislationHeading", lang)}</span>
+              <details class="reference-legislation-details">
+                <summary class="reference-legislation-summary">
+                  <span>${getTranslation("referenceLegislationToggle", lang)}</span>
+                  <span class="meta-chip tabular-num">${referenceFrameworks.length}</span>
+                </summary>
+                <div class="reference-legislation-body">
+                  <p class="reference-legislation-desc">${getTranslation("referenceLegislationDesc", lang)}</p>
+                  ${this.renderReferenceLegislation(referenceFrameworks, lang)}
+                </div>
+              </details>
+            </div>
+          `
+              : ""
+          }
         </div>
       </div>
     `;
@@ -278,6 +302,33 @@ export class DecisionPaneComponent {
           <legend class="framework-region-legend">${getTranslation(REGION_LABEL[region], lang)}</legend>
           <div class="regulatory-list">${items}</div>
         </fieldset>`;
+    }).join("");
+  }
+
+  private renderReferenceLegislation(reference: ReferenceFrameworkInfo[], lang: Language): string {
+    // EN: Group consultation-only global legislation by region | ES: Agrupar legislacion global de consulta por region
+    return REGION_ORDER.map((region) => {
+      const group = reference.filter((item) => item.region === region);
+      if (group.length === 0) return "";
+      const items = group
+        .map(
+          (item) => `
+          <article class="reg-item reference-item">
+            <div class="framework-option-title-row">
+              <strong>${item.name}</strong>
+              <span class="meta-chip binding-chip binding-${item.binding_level.toLowerCase()}">${getTranslation(BINDING_LABEL[item.binding_level], lang)}</span>
+            </div>
+            <span class="framework-option-desc">${item.jurisdiction} &middot; ${item.year}</span>
+            <p class="reference-item-summary">${item.summary}</p>
+            <span class="reference-item-source">${getTranslation("officialReferenceLabel", lang)}: ${item.official_reference}</span>
+          </article>`,
+        )
+        .join("");
+      return `
+        <section class="framework-region-group">
+          <h3 class="framework-region-legend">${getTranslation(REGION_LABEL[region], lang)}</h3>
+          <div class="regulatory-list">${items}</div>
+        </section>`;
     }).join("");
   }
 

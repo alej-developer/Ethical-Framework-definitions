@@ -67,17 +67,23 @@ class FrameworkType(str, Enum):
     # EN: Europe | ES: Europa
     EU_AI_ACT = "EU_AI_ACT"
     UK_AI_GOVERNANCE = "UK_AI_GOVERNANCE"
+    COE_AI_CONVENTION = "COE_AI_CONVENTION"
     # EN: Americas | ES: Americas
     NIST_AI_RMF = "NIST_AI_RMF"
+    COLORADO_AI_ACT = "COLORADO_AI_ACT"
     BRAZIL_PL_2338 = "BRAZIL_PL_2338"
+    PERU_AI_LAW_31814 = "PERU_AI_LAW_31814"
     # EN: Asia-Pacific | ES: Asia-Pacifico
     KOREA_AI_BASIC_ACT = "KOREA_AI_BASIC_ACT"
     CHINA_AI_REGULATIONS = "CHINA_AI_REGULATIONS"
     JAPAN_AI_ACT = "JAPAN_AI_ACT"
     SINGAPORE_AI_GOVERNANCE = "SINGAPORE_AI_GOVERNANCE"
     INDIA_DPDP_AI = "INDIA_DPDP_AI"
+    # EN: Africa | ES: Africa
+    AU_CONTINENTAL_AI = "AU_CONTINENTAL_AI"
     # EN: International Standards | ES: Estandares Internacionales
     IEEE_7000_SERIES = "IEEE_7000_SERIES"
+    ISO_IEC_42001 = "ISO_IEC_42001"
 
 
 @dataclass(frozen=True)

@@ -30,6 +30,10 @@ export interface Translations {
   rationalePlaceholder: string;
   rationaleMinCharsNote: string;
   frameworksHeading: string;
+  referenceLegislationHeading: string;
+  referenceLegislationToggle: string;
+  referenceLegislationDesc: string;
+  officialReferenceLabel: string;
   regionEurope: string;
   regionAmericas: string;
   regionAsiaPacific: string;
@@ -95,6 +99,10 @@ export const dictionary: Record<Language, Translations> = {
     rationalePlaceholder: "Articulate your ethical reasoning and justification for the chosen intervention strategy (minimum 10 characters)...",
     rationaleMinCharsNote: "Minimum 10 characters required for statutory audit logging.",
     frameworksHeading: "Target Regulatory Frameworks",
+    referenceLegislationHeading: "Global AI Legislation Reference (Consultation)",
+    referenceLegislationToggle: "Consult additional global laws, bills & treaties",
+    referenceLegislationDesc: "Additional documented AI legislation and international instruments outside the 15 executable evaluators, provided for global regulatory context.",
+    officialReferenceLabel: "Official reference",
     regionEurope: "Europe",
     regionAmericas: "Americas",
     regionAsiaPacific: "Asia-Pacific",
@@ -158,6 +166,10 @@ export const dictionary: Record<Language, Translations> = {
     rationalePlaceholder: "Articule su razonamiento etico y justificacion para la estrategia elegida (minimo 10 caracteres)...",
     rationaleMinCharsNote: "Se requieren minimo 10 caracteres para el registro de auditoria estatutaria.",
     frameworksHeading: "Marcos Regulatorios Objetivo",
+    referenceLegislationHeading: "Legislacion Global de IA (Solo Consulta)",
+    referenceLegislationToggle: "Consultar otras leyes, proyectos y tratados globales",
+    referenceLegislationDesc: "Legislaciones e instrumentos internacionales adicionales fuera de los 15 evaluadores ejecutables, disponibles como referencia normativa global.",
+    officialReferenceLabel: "Referencia oficial",
     regionEurope: "Europa",
     regionAmericas: "Americas",
     regionAsiaPacific: "Asia-Pacifico",

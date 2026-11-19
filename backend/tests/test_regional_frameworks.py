@@ -13,12 +13,17 @@ from domain.entities import (
     TaskType,
 )
 from domain.frameworks import (
+    AUContinentalAIEvaluator,
     BrazilPL2338Evaluator,
     ChinaAIRegulationsEvaluator,
+    CoEAIConventionEvaluator,
+    ColoradoAIActEvaluator,
     IndiaDPDPAIEvaluator,
+    ISO42001Evaluator,
     JapanAIActEvaluator,
     KoreaAIBasicActEvaluator,
     NISTAIRMFEvaluator,
+    PeruAILaw31814Evaluator,
     SingaporeAIGovernanceEvaluator,
     UKAIGovernanceEvaluator,
     build_default_evaluators,
@@ -28,13 +33,18 @@ from domain.interfaces import IEthicalEvaluator
 # EN: (evaluator class, framework, region, binding level) | ES: (clase evaluadora, marco, region, nivel de vinculacion)
 REGIONAL_CASES = [
     (UKAIGovernanceEvaluator, FrameworkType.UK_AI_GOVERNANCE, FrameworkRegion.EUROPE, BindingLevel.VOLUNTARY_STANDARD),
+    (CoEAIConventionEvaluator, FrameworkType.COE_AI_CONVENTION, FrameworkRegion.EUROPE, BindingLevel.LEGALLY_BINDING),
     (NISTAIRMFEvaluator, FrameworkType.NIST_AI_RMF, FrameworkRegion.AMERICAS, BindingLevel.VOLUNTARY_STANDARD),
+    (ColoradoAIActEvaluator, FrameworkType.COLORADO_AI_ACT, FrameworkRegion.AMERICAS, BindingLevel.LEGALLY_BINDING),
     (BrazilPL2338Evaluator, FrameworkType.BRAZIL_PL_2338, FrameworkRegion.AMERICAS, BindingLevel.PROPOSED_LEGISLATION),
+    (PeruAILaw31814Evaluator, FrameworkType.PERU_AI_LAW_31814, FrameworkRegion.AMERICAS, BindingLevel.LEGALLY_BINDING),
     (KoreaAIBasicActEvaluator, FrameworkType.KOREA_AI_BASIC_ACT, FrameworkRegion.ASIA_PACIFIC, BindingLevel.LEGALLY_BINDING),
     (ChinaAIRegulationsEvaluator, FrameworkType.CHINA_AI_REGULATIONS, FrameworkRegion.ASIA_PACIFIC, BindingLevel.LEGALLY_BINDING),
     (JapanAIActEvaluator, FrameworkType.JAPAN_AI_ACT, FrameworkRegion.ASIA_PACIFIC, BindingLevel.VOLUNTARY_STANDARD),
     (SingaporeAIGovernanceEvaluator, FrameworkType.SINGAPORE_AI_GOVERNANCE, FrameworkRegion.ASIA_PACIFIC, BindingLevel.VOLUNTARY_STANDARD),
     (IndiaDPDPAIEvaluator, FrameworkType.INDIA_DPDP_AI, FrameworkRegion.ASIA_PACIFIC, BindingLevel.LEGALLY_BINDING),
+    (AUContinentalAIEvaluator, FrameworkType.AU_CONTINENTAL_AI, FrameworkRegion.AFRICA, BindingLevel.VOLUNTARY_STANDARD),
+    (ISO42001Evaluator, FrameworkType.ISO_IEC_42001, FrameworkRegion.INTERNATIONAL, BindingLevel.VOLUNTARY_STANDARD),
 ]
 
 
@@ -103,7 +113,10 @@ def test_alignment_status_only_for_non_binding_frameworks(
         assert assessment.alignment_status is not None
 
 
-@pytest.mark.parametrize("evaluator_cls", [BrazilPL2338Evaluator, ChinaAIRegulationsEvaluator])
+@pytest.mark.parametrize(
+    "evaluator_cls",
+    [BrazilPL2338Evaluator, ChinaAIRegulationsEvaluator, CoEAIConventionEvaluator, PeruAILaw31814Evaluator],
+)
 def test_prohibited_domain_yields_unacceptable_risk(
     evaluator_cls: type[IEthicalEvaluator],
 ) -> None:
